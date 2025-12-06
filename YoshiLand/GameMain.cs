@@ -86,11 +86,12 @@ namespace YoshiLand
             StageSystem.Initialize(Content);
             SFXSystem.Initialize(Content, engine, playbackDevice);
             SongSystem.Initialize(Content, engine, playbackDevice);
-            
+
 #if !DEBUG
             LoadScreen(new LogoScreen(this));
 #else
-            LoadScreen(new TitleScreen(this));
+            //LoadScreen(new TitleScreen(this));
+            LoadScreen(new GamingScreen(this, StageSystem.GetStageByName("grassland1")));
 #endif
             base.LoadContent();
         }

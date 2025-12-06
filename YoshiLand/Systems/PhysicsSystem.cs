@@ -1,192 +1,87 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoGame.Extended;
+using MonoGame.Extended.Tiled;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using YoshiLand.Enums;
 using YoshiLand.GameObjects;
 using YoshiLand.Models;
 
 namespace YoshiLand.Systems
 {
-    public struct PhysicsResult
+    public struct PhysicsConfig
     {
-        public bool HasHorizontalCollision { get; set; }
+        public PhysicsConfig() { }
 
-        public bool HasVerticalCollision { get; set; }
-
-        public bool IsOnGround { get; set; }
-
-        public CollisionDirection CollisionDirection { get; set; }
+        //public const float Gravity = 0.5f;
+        //public const float MaxFallSpeed = 12f;
+        //public const float GroundFriction = 0.8f;
+        //public const float AirFriction = 0.95f;
+        //public const float MaxRunSpeed = 5f;
+        //public const float Acceleration = 0.5f;
+        //public const float JumpStrength = 10f;
+        public float Gravity { get; set; } = 0.5f;
+        public float MaxFallSpeed { get; set; } = 12f;
+        public float Fiction { get; set; } = 0.8f;
+        public float AirFiction { get; set; } = 0.95f;
     }
-
-    public class PhysicsConfig
-    {
-        public float Gravity { get; set; } = PhysicsSystem.DefaultGravity;
-
-        public float MaxGravity { get; set; } = PhysicsSystem.DefaultMaxGravity;
-
-        public float Friction { get; set; } = PhysicsSystem.DefaultFriction;
-
-        public bool EnableGravity { get; set; } = true;
-
-        public bool EnableFriction { get; set; } = true;
-
-        public bool EnableCollision { get; set; } = true;
-    }
-
     public class PhysicsSystem
     {
-        private static PhysicsSystem _instance;
-        private Dictionary<GameObject, PhysicsConfig> _particularConfig = new Dictionary<GameObject, PhysicsConfig>();
+        private GameObject _targetObject;
+        private TiledMap _tilemap;
 
-        public const float DefaultGravity = 0.5f;
-        public const float DefaultMaxGravity = 8f;
-        public const float DefaultFriction = 0.4f;
+        public PhysicsConfig Config { get; set; } = new PhysicsConfig();
 
-        public float Gravity { get; set; } = DefaultGravity;
-
-        public float MaxGravity { get; set; } = DefaultMaxGravity;
-
-        public float Friction { get; set; } = DefaultFriction;
-
-        public bool EnableCollision { get; set; } = true;
-
-        public static PhysicsSystem Instance => _instance ??= new PhysicsSystem();
-
-        public void Register(GameObject obj, PhysicsConfig config = null)
-        {
-            _particularConfig[obj] = config ?? new PhysicsConfig();
+        public PhysicsSystem(GameObject targetObject, TiledMap tilemap) 
+        { 
+            _targetObject = targetObject;
+            _tilemap = tilemap;
         }
 
-        public void Unregister(GameObject obj)
-        {
-            _particularConfig.Remove(obj);
-        }
-
-        public PhysicsResult Apply(GameObject obj, GameTime gameTime)
+        public void Apply(GameTime gameTime, bool applyImmediately = true)
         {
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (!_particularConfig.TryGetValue(obj, out PhysicsConfig config))
+            _targetObject.IsOnGround = CheckOnGround();
+            if (_targetObject.Velocity.Y != 0)
             {
-                config = new PhysicsConfig();
+                VerticalCollision();
             }
-            PhysicsResult result = new PhysicsResult();
-            if (config.EnableGravity && !obj.IsOnGround)
+
+            if(_targetObject.Velocity.X != 0)
             {
-                obj.Velocity = new Vector2(obj.Velocity.X, MathHelper.Clamp(obj.Velocity.Y + config.Gravity, -config.MaxGravity, config.MaxGravity));
+                HorizontalCollision();
             }
-            Vector2 newPosition = obj.Position + obj.Velocity * elapsedTime;
-            if (config.EnableCollision)
+
+            ApplyFicition();
+        }
+
+        private void HorizontalCollision() // X axis
+        {
+
+        }
+
+        private void VerticalCollision() // Y axis
+        {
+            if (!_targetObject.IsOnGround)
             {
-                if (obj.Velocity.X != 0)
-                {
-                    newPosition = HorizontalCollision(obj, newPosition, ref result);
-                }
-                if (obj.Velocity.Y != 0)
-                {
-                    newPosition = VerticalCollision(obj, newPosition, ref result);
-                }
-                result.IsOnGround = GroundCollsion(obj, newPosition);
+                _targetObject.Velocity += new Vector2(0, Config.Gravity);
             }
             else
             {
-                obj.Position = newPosition;
+                _targetObject.Velocity.SetY(0);
             }
-            if(config.EnableFriction && result.IsOnGround)
-            {
-                ApplyFriction(obj, config.Friction);
-            }
-            return result;
+            Math.Clamp(_targetObject.Velocity.Y, 0, Config.MaxFallSpeed);
         }
 
-        private Vector2 HorizontalCollision(GameObject obj, Vector2 newPosition, ref PhysicsResult result)
+        private void ApplyFicition()
         {
-            Rectangle testRectangle = obj.GetCollisionBox(newPosition);
-            if(!obj.IsOutOfTilemap(newPosition))
-            {
-                bool isCollided = obj.IsCollidingWithTile(testRectangle, out TileCollisionResult collisionResult);
-                if(isCollided && !collisionResult.TileType.HasFlag(TileType.Penetrable))
-                {
-                    result.HasHorizontalCollision = true;
-                    result.CollisionDirection = collisionResult.Direction;
-                    obj.Velocity = new Vector2(0, obj.Velocity.Y);
-                    if (collisionResult.Direction == CollisionDirection.Left)
-                    {
-                        newPosition = new Vector2(collisionResult.TileRectangle.Right, newPosition.Y);
-                    }
-                    else if (collisionResult.Direction == CollisionDirection.Right)
-                    {
-                        newPosition = new Vector2(collisionResult.TileRectangle.Left - obj.CollisionBox.Width, newPosition.Y);
-                    }
-                }
-            }
-            return newPosition;
+
         }
 
-        private Vector2 VerticalCollision(GameObject obj, Vector2 newPosition, ref PhysicsResult result)
+        private bool CheckOnGround()
         {
-            Vector2 verticalMove = new Vector2(0, obj.Velocity.Y);
-            Vector2 testPosition = obj.Position + verticalMove;
-
-            if (testPosition.Y < 0)
-            {
-                // 上边界碰撞
-                newPosition.Y = 0;
-                obj.Velocity = new Vector2(obj.Velocity.X, 0);
-                result.HasVerticalCollision = true;
-            }
-            else
-            {
-                Rectangle testRect = obj.GetCollisionBox(testPosition);
-                if (obj.IsCollidingWithTile(testRect, out TileCollisionResult tileResult))
-                {
-                    result.HasVerticalCollision = true;
-
-                    if (obj.Velocity.Y > 0) // 向下碰撞
-                    {
-                        if (!tileResult.TileType.HasFlag(TileType.Penetrable))
-                        {
-                            float tileTop = tileResult.TileRectangle.Top;
-                            newPosition.Y = tileTop - obj.Size.Y;
-                            obj.Velocity = new Vector2(obj.Velocity.X, 0);
-                            result.IsOnGround = true;
-                        }
-                    }
-                    else if (obj.Velocity.Y < 0) // 向上碰撞
-                    {
-                        if (!tileResult.TileType.HasFlag(TileType.Penetrable))
-                        {
-                            newPosition.Y = tileResult.TileRectangle.Bottom;
-                            obj.Velocity = new Vector2(obj.Velocity.X, 0);
-                        }
-                    }
-                }
-                else
-                {
-                    newPosition = testPosition;
-                }
-            }
-
-            return newPosition;
-        }
-
-        private bool GroundCollsion(GameObject obj, Vector2 position)
-        {
-            Rectangle collisionBox = obj.GetCollisionBox(position);
+            Rectangle collisionBox = _targetObject.GetCollisionBox(_targetObject.Position);
             Rectangle testRectangle = new Rectangle(collisionBox.X, collisionBox.Y + collisionBox.Height, collisionBox.Width, 3);
-            return obj.IsCollidingWithTile(testRectangle, out TileCollisionResult collisionResult) && !collisionResult.TileType.HasFlag(TileType.Penetrable);
-        }
-
-        private void ApplyFriction(GameObject obj, float friction)
-        {
-            if (obj.Velocity.X > 0)
-            {
-                obj.Velocity = new Vector2(Math.Max(0, obj.Velocity.X - friction), obj.Velocity.Y);
-            }
-            else if (obj.Velocity.X < 0)
-            {
-                obj.Velocity = new Vector2(Math.Min(0, obj.Velocity.X + friction), obj.Velocity.Y);
-            }
+            return _targetObject.IsCollidingWithTile(testRectangle, out TileCollisionResult collisionResult) && !collisionResult.TileType.HasFlag(TileType.Penetrable);
         }
     }
 }

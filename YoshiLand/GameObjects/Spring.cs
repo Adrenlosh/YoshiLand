@@ -107,7 +107,7 @@ namespace YoshiLand.GameObjects
                 case SpringStatus.Normal:
                     break;
             }
-            ApplyPhysics(gameTime);
+            //ApplyPhysics(gameTime);
             //if (_velocity.X > 0)
             //{
             //    _velocity.X -= MathHelper.Lerp(0, Friction, 0.3f);
@@ -144,7 +144,7 @@ namespace YoshiLand.GameObjects
             //        _velocity.Y = MaxGravity;
             //}
 
-            newPosition += Velocity;
+            //newPosition += Velocity;
             //if (_velocity.Y != 0) //垂直碰撞检测
             //{
             //    Vector2 verticalMove = new Vector2(0, _velocity.Y);
@@ -192,7 +192,7 @@ namespace YoshiLand.GameObjects
             //    }
             //}
 
-            Position = newPosition;
+            //Position = newPosition;
 
             _sprite.Update(gameTime);
         }

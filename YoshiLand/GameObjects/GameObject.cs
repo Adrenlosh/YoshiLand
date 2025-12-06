@@ -13,36 +13,26 @@ namespace YoshiLand.GameObjects
     public abstract class GameObject : ICollidable
     {
         protected readonly TiledMap _tilemap;
+        private PhysicsSystem physics;
 
         public string Name { get; set; } = string.Empty;
+        public bool IsOnGround { get; set; } = false;
         public bool IsActive { get; set; } = true;
         public bool IsCaptured { get; set; } = false;
         public bool IsCapturable { get; set; } = true;
-        public virtual bool IsOnGround { get; set; }
         public virtual Vector2 CenterBottomPosition { get; set; }
         public abstract Rectangle CollisionBox { get; }
         public virtual Vector2 Velocity { get; set; } = Vector2.Zero;
         public Point Size { get; set; } = Point.Zero;
         public Vector2 Position { get; set; } = Vector2.Zero;
         public Rectangle ScreenBounds { get; set; } = Rectangle.Empty;
+        
+        public PhysicsSystem Physics { get; set; }
 
         protected GameObject(TiledMap tilemap)
         {
             _tilemap = tilemap;
-            PhysicsSystem.Instance.Register(this, GetPhysicsConfig());
-        }
-
-        ~GameObject()
-        {
-            PhysicsSystem.Instance.Unregister(this);
-        }
-
-        protected virtual PhysicsConfig GetPhysicsConfig() => new PhysicsConfig();
-
-        protected virtual void ApplyPhysics(GameTime gameTime)
-        {
-            PhysicsResult physicsResult = PhysicsSystem.Instance.Apply(this, gameTime);
-            IsOnGround = physicsResult.IsOnGround;
+            Physics = new PhysicsSystem(this, _tilemap);
         }
 
         public virtual void OnCollision(GameObject other, ObjectCollisionResult collision) { }

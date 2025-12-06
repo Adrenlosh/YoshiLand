@@ -43,8 +43,8 @@ namespace YoshiLand.GameObjects
 
         public override void Update(GameTime gameTime)
         {
-            ApplyPhysics(gameTime);
-            Position += Velocity;
+            //ApplyPhysics(gameTime);
+            //Position += Velocity;
             if(Velocity.X < 0)
             {
                 _sprite.Effect = SpriteEffects.FlipHorizontally;
