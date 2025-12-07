@@ -213,7 +213,6 @@ namespace YoshiLand.Screens
         private void OnGoal()
         {
             SongSystem.Play("goal");
-            GameObjectsSystem.Player.ResetVelocity(true);
             GameObjectsSystem.Player.CanHandleInput = false;
             _shouldMovePlayer = true;
             _gameSceneRenderer.FadeType = FadeType.Goal;

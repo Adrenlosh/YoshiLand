@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Tiled;
 using System;
-using System.Diagnostics;
 using YoshiLand.Enums;
 using YoshiLand.Interfaces;
 using YoshiLand.Models;

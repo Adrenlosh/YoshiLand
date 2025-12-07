@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Graphics;
 using MonoGame.Extended.Tiled;
 using System;
-using System.Diagnostics;
 
 namespace YoshiLand.GameObjects
 {
@@ -43,8 +42,9 @@ namespace YoshiLand.GameObjects
 
         public override void Update(GameTime gameTime)
         {
-            //ApplyPhysics(gameTime);
-            //Position += Velocity;
+            Physics.ApplyPhysics(gameTime);
+            if (Velocity.X != 0 && _sprite.CurrentAnimation != "walk")
+                _sprite.SetAnimation("walk");
             if(Velocity.X < 0)
             {
                 _sprite.Effect = SpriteEffects.FlipHorizontally;
@@ -55,11 +55,11 @@ namespace YoshiLand.GameObjects
             }
             if ((int)gameTime.TotalGameTime.TotalSeconds % 2 == 0)
             {
-                Velocity = new Vector2(0.5f, Velocity.Y);
+                Velocity = new Vector2(2f, Velocity.Y);
             }
             else
             {
-                Velocity = new Vector2(-0.5f, Velocity.Y);
+                Velocity = new Vector2(-1f, Velocity.Y);
             }
             _sprite.Update(gameTime);
         }

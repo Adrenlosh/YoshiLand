@@ -36,7 +36,7 @@ namespace YoshiLand
             {
                 PreferredBackBufferWidth = GlobalConfig.VirtualResolution_Width,
                 PreferredBackBufferHeight = GlobalConfig.VirtualResolution_Height,
-                PreferHalfPixelOffset = false,
+                PreferHalfPixelOffset = true,
             };
             _graphicsDeviceManager.ApplyChanges();
             _screenManager = new ScreenManager();
