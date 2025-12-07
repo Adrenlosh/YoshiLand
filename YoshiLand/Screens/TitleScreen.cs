@@ -20,6 +20,7 @@ namespace YoshiLand.Screens
 
         private GameSceneRender _gameSceneRenderer;
         private InteractionSystem _interactionSystem;
+        private Texture2D _logo;
 
         public new GameMain Game => (GameMain)base.Game;
 
@@ -49,13 +50,14 @@ namespace YoshiLand.Screens
         public override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            _logo = Content.Load<Texture2D>("Images/logo");
             _maskTransition = new MaskTransition(GraphicsDevice, Content, TransitionType.In | TransitionType.Out, 2);
             _stage = StageSystem.GetStageByName("grassland1");
             _gameSceneRenderer = new GameSceneRender(GraphicsDevice, Game.Window, Content);
             _gameSceneRenderer.LoadContent();
             _gameSceneRenderer.LoadMap(_stage.StartStage());
             _interactionSystem = new InteractionSystem();
-            GameObjectsSystem.Player.CanHandleInput = false;
+            GameObjectsSystem.Player.CanHandleInput = true;
             SongSystem.Play("title");
             InitializeUI();
             base.LoadContent();
@@ -81,6 +83,9 @@ namespace YoshiLand.Screens
             {
                 _spriteBatch.FillRectangle(_gameSceneRenderer.ViewportAdapter.BoundingRectangle, Color.Black);
             }
+            _spriteBatch.End();
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: GameMain.ViewportAdapter.GetScaleMatrix());
+            _spriteBatch.Draw(_logo, new Vector2((GameMain.ViewportAdapter.VirtualWidth - _logo.Width) / 2, 50), Color.White);
             _spriteBatch.End();
             GameMain.UiSystem.Draw(gameTime, _spriteBatch);
         }

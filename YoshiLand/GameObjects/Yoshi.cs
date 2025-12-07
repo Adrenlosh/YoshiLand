@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
 using MonoGame.Extended.Graphics;
 using MonoGame.Extended.Tiled;
 using System;
@@ -29,6 +31,9 @@ namespace YoshiLand.GameObjects
         private GameObject _capturedObject;
         private int _lastDirection;
 
+        private bool _isSquating = false;
+        private bool _isLookingUp = false;
+        public override Point SpriteSize => _yoshiSprite.Size;
         public override Vector2 CenterBottomPosition
         {
             get => new Vector2(Position.X + _yoshiSprite.Size.X / 2, Position.Y + _yoshiSprite.Size.Y);
@@ -110,16 +115,40 @@ namespace YoshiLand.GameObjects
         {
             int currentInputDirection = 0;
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-
-            if (currentInputDirection != 0 )
+            if(GameControllerSystem.MoveDown())
+            {
+                _isSquating = true;
+                
+            }
+            else
+            {
+                _isSquating = false;
+            }
+            if(GameControllerSystem.MoveUp())
+            {
+                _isLookingUp = true;
+            }
+            else
+            {
+                _isLookingUp = false;
+            }
+            if (GameControllerSystem.JumpPressed() && !_isSquating)
+            {
+                Physics.ApplyJump(10f);
+            }
+            if (GameControllerSystem.MoveLeft() && !_isSquating && !_isLookingUp)
+            {
+                Physics.ApplyAcceleration(-0.5f, 5);
+                currentInputDirection = -1;
+            }
+            if (GameControllerSystem.MoveRight() && !_isSquating && !_isLookingUp)
+            {
+                Physics.ApplyAcceleration(0.5f, 5);
+                currentInputDirection = 1;
+            }         
+            if (currentInputDirection != 0)
             {
                 _lastDirection = currentInputDirection;
-            }
-
-            if(GameControllerSystem.JumpPressed())
-            {
-                Velocity += new Vector2(Velocity.X, -1f);
             }
         }
 
@@ -164,10 +193,38 @@ namespace YoshiLand.GameObjects
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (CanHandleInput)
                 HandleInput(gameTime);
-            Physics.Apply(gameTime);
-            Position += Velocity;
-            //Position = new Vector2(100, 100);
-            Debug.WriteLine(Velocity);
+            Physics.ApplyPhysics(gameTime);
+            if (_isSquating)
+            {
+                SetYoshiAnimation("squat", false);
+            }
+            else
+            {
+                if (Velocity.X != 0)
+                {
+                    if (Math.Abs(Velocity.X) < 2)
+                        SetYoshiAnimation("walk");
+                    else
+                        SetYoshiAnimation("run");
+                }
+                else
+                {
+                    SetYoshiAnimation("stand");
+                }
+                if (Velocity.Y < 0)
+                {
+                    SetYoshiAnimation("jump");
+                }
+                else if (Velocity.Y > 0)
+                {
+                    SetYoshiAnimation("fall");
+                }
+                if(_isLookingUp && IsOnGround)
+                {
+                    SetYoshiAnimation("look-up");
+                }
+            }
+            _yoshiSprite.Effect = _lastDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
             _yoshiSprite.Update(gameTime);
         }
 

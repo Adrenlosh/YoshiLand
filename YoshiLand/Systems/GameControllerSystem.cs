@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Input;
+using System;
 
 namespace YoshiLand.Systems;
 
@@ -96,5 +97,10 @@ public static class GameControllerSystem
     {
         return GetStateKeyboard().WasKeyPressed(Keys.Escape) ||
             GetStatePad().WasKeyPressed(Buttons.Back);
+    }
+
+    internal static bool JumpHold()
+    {
+        throw new NotImplementedException();
     }
 }

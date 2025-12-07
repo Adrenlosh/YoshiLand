@@ -22,6 +22,7 @@ namespace YoshiLand.GameObjects
         public bool IsCapturable { get; set; } = true;
         public virtual Vector2 CenterBottomPosition { get; set; }
         public abstract Rectangle CollisionBox { get; }
+        public virtual Point SpriteSize { get; } = new Point(16, 16);
         public virtual Vector2 Velocity { get; set; } = Vector2.Zero;
         public Point Size { get; set; } = Point.Zero;
         public Vector2 Position { get; set; } = Vector2.Zero;

@@ -124,7 +124,7 @@ namespace YoshiLand.Screens
             if (player != null)
             {
                 bool useFadeCamera = isTransitioning || _gameSceneRenderer.FadeStatus == FadeStatus.None;
-                _gameSceneRenderer.Update(gameTime, player.Position, useFadeCamera,
+                _gameSceneRenderer.Update(gameTime, player.Position, true,
                     player.FaceDirection, player.Velocity);
             }
 

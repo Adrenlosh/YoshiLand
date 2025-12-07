@@ -137,11 +137,11 @@ namespace YoshiLand.UI
                     float progress = _fadeTimer / FadeDuration;
                     if (_fadeStatus == FadeStatus.In)
                     {
-                        _alpha = (int)(255 * progress);
+                        _alpha = (int)(200 * progress);
                     }
                     else if (_fadeStatus == FadeStatus.Out)
                     {
-                        _alpha = (int)(255 * (1 - progress));
+                        _alpha = (int)(200 * (1 - progress));
                     }
                     _pausePanel.DrawColor = new Color(Color.Black, _alpha);
                 }
