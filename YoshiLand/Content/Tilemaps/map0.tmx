@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.11.2" class="GameMap" orientation="orthogonal" renderorder="right-down" width="320" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="3228">
  <properties>
-  <property name="Song" value="song2"/>
+  <property name="Song" value="song1"/>
  </properties>
  <tileset firstgid="1" source="tileset.tsx"/>
  <imagelayer id="7" name="Background" parallaxx="0.1" repeatx="1">
@@ -14,7 +14,7 @@
  </layer>
  <layer id="1" name="Ground" width="320" height="27">
   <data encoding="base64" compression="zlib">
-   eJzt2t1qhDAQBlCxpX+3u23f/02r0FAJajaa3WhzDgSG8O0yV0NC7LptLht/B3B25h/QKvMPaJX5B7TK/AMAAAAAAPBmArTJ7ANaZPYBLVqafc/D6of1FNXxXv+AHgFKWzv3vQzrY1hvUR3vfd+5R4DSUnfecca9/65pHe993bFHgDmXG1a/slLG8104703reM/5DziLW986xhn32v3dc0Md7zn/Af/NeLcNZ7xpHe85/wFnF58L3X+BVsTzz/0XaEU8/9x/gdrmvkHO+Ta5xtrab6j3WPvfnB5kZWXrZ+e+QT7St8mfiR5y+g31HqV6kJWVrZ+d+wb5SN8mXxM95PQb6j1K9SArK1s/G+bg0nts7bfZcP5b6iGn31DvUaoHWVnZ+tm5N9ilusbb7DXRQ06/od6jVA+ysrLHyIYzYaqO9x51/lvrIaffUO9RqgdZWdn62R89xzUH
+   eJzt2tlqwzAQBVCTlm6v6fL/f1obKmoGb4ocq67OAcEgbsI8DRJW193meuPvAM7O/ANaZf4BrTL/gFaZfwAAAAAAAL6ZAG0y+4AWmX1Ai+Zm32O/Lv16CHXcAzijpXPfU7/e+vUS6rgHcDZrd95hxr3+rHEd9wCOdt2wLgtrzXC+S+e9cR33AM5i67eOYcY9d7/33FTHPYD/ZrjbpjPeuI57AGcXz4Xuv0Ar4vxz/wVaEeef+y9Q29Qb5K1vk2utW/tNdYml/83pQVZWtn526g3y1rfJX939faz0kNNvqkvs1YOsrGz97NQb5K1vkz+7+3tf6SGn31SX2KsHWVnZ+tk0B+e+xy59mz3y/DfXQ06/qS6xVw+ysrL1s1PfYOfquHfU+W+ph5x+U11irx5kZWX/RjadCdfquHfU+W+ph5x+U11irx5kZWXrZ78B++00UA==
   </data>
  </layer>
  <layer id="3" name="Decorations" width="320" height="27">
@@ -22,9 +22,6 @@
    eJztwQEBAAAAgiD/r25IQAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPBohwAAAQ==
   </data>
  </layer>
- <imagelayer id="13" name="Guide" offsetx="176" offsety="304">
-  <image source="guide.png" width="33" height="31"/>
- </imagelayer>
  <objectgroup id="2" name="Objects">
   <object id="16" name="Player" type="SpawnPoint" x="32" y="304">
    <properties>

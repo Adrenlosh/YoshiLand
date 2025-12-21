@@ -5,6 +5,7 @@ using MonoGame.Extended.Graphics;
 using MonoGame.Extended.Tiled;
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices.Marshalling;
 using YoshiLand.Enums;
 using YoshiLand.Interfaces;
 using YoshiLand.Models;
@@ -33,16 +34,16 @@ namespace YoshiLand.GameObjects
         FastFall
     }
 
-    public class Yoshi : GameObject, IDamageable //TODO:飘浮
+    public class Yoshi : GameObject, IDamageable //TODO:死亡、受伤
     {
         private const float MaxSpeed = 5f;
         private const float Acceleration = 0.5f;
-        private const float BaseJumpForce = 7f;
+        private const float BaseJumpForce = 6f;
         private const float Gravity = 0.5f;
         private const float PlummetGravity = 1f;
         private const float ThrowingAnimationDuration = 0.5f;
-        private const float MaxFloatTime = 1.2f;
-        private const float MaxJumpHoldTime = 0.3f;
+        private const float MaxFloatTime = 0.8f;
+        private const float MaxJumpHoldTime = 0.35f;
         private const float FloatActivationThreshold = 0.15f;
         private const float FloatForce = 0.2f;
 
@@ -272,7 +273,7 @@ namespace YoshiLand.GameObjects
                 _jumpHoldTime = 0f;
                 SFXSystem.Play("yoshi-jump");
             }
-            if (_isJumping && _jumpInitiated && _jumpHoldTime < MaxJumpHoldTime && Velocity.Y < 0)
+            if (_isJumping && _jumpInitiated && _jumpHoldTime < MaxJumpHoldTime && Velocity.Y < 0 && !_isFloating)
             {
                 if (isJumpButtonHeld)
                 {
@@ -287,6 +288,7 @@ namespace YoshiLand.GameObjects
             }
             if (_isJumping && !IsOnGround && Velocity.Y >= 0 && isJumpButtonHeld && !_isFloating && _jumpHoldTime >= FloatActivationThreshold && !_isHoldingEgg)
             {
+                VibrationSystem.SetVibration(0.05f, 0.05f, MaxFloatTime);
                 _isFloating = true;
                 _floatTime = 0f;
             }
@@ -294,33 +296,33 @@ namespace YoshiLand.GameObjects
             {
                 _floatTime += elapsedTime;
 
-                if (_floatTime < MaxFloatTime && isJumpButtonHeld)
+                if (_floatTime <= MaxFloatTime && isJumpButtonHeld)
                 {
-                    Physics.Gravity = 0.3f;
-                    if (_floatTime < 0.3f)
+                    if(_floatTime < 0.2) // d
                     {
-                        
-                        float targetVelocity = 1.5f;
-                        Physics.ApplyJump(MathHelper.Lerp(Velocity.Y, targetVelocity, 0.1f), true);
+
                     }
-                    else if (_floatTime < 1.0f)
+                    else if(_floatTime >= 0.2f &&  _floatTime < 0.4f) // d
                     {
-                        Physics.ApplyJump(FloatForce, true);
-                        SFXSystem.Play("yoshi-float");
+                        if(Velocity.Y > 2f)
+                        {
+                            Physics.ApplyJump(0.3f, true);
+                        }
+                        SFXSystem.Stop("yoshi-float");
                     }
-                    else
+                    else if(_floatTime <= MaxFloatTime && _floatTime >=0.4f) // u
                     {
-                        Physics.ApplyJump(Math.Min(Velocity.Y + Gravity * 0.3f, 1.2f), true);
+                        Physics.ApplyJump(2f, true);
                         SFXSystem.Stop("yoshi-float");
                     }
                 }
                 else
                 {
-                    Physics.Gravity = Gravity;
                     _isFloating = false;
                     _isJumping = false;
                     _jumpInitiated = false;
                     _floatTime = 0;
+                    VibrationSystem.ResetVibration();
                 }
             }
             if (_isFloating && !isJumpButtonHeld)
@@ -329,10 +331,12 @@ namespace YoshiLand.GameObjects
                 _isJumping = false;
                 _jumpInitiated = false;
                 _floatTime = 0;
+                VibrationSystem.ResetVibration();
             }
 
             if (IsOnGround)
             {
+                Physics.Gravity = Gravity;
                 _isFloating = false;
                 _isJumping = false;
                 _jumpInitiated = false;
@@ -390,13 +394,21 @@ namespace YoshiLand.GameObjects
                 else if (_plummetStage == PlummetState.FastFall)
                     SetYoshiAnimation("plummet2");
             }
-            else if (_isFloating)
+            else if (_isFloating && !_isHoldingEgg)
             {
                 // 浮动状态
-                if (_floatTime >= 0.3f && _floatTime < 1.0f && !_isHoldingEgg)
-                    SetYoshiAnimation("float");
-                else if (!_isHoldingEgg)
+                //if (_floatTime >= 0.3f && _floatTime < 1.0f && !_isHoldingEgg)
+                //    SetYoshiAnimation("float");
+                //else if (!_isHoldingEgg)
+                //    SetYoshiAnimation("fall");
+                if (_floatTime < 0.2)
+                {
                     SetYoshiAnimation("fall");
+                }
+                else if (_floatTime >= 0.2f && _floatTime <= MaxFloatTime)
+                {
+                    SetYoshiAnimation("float");
+                }
             }
             else
             {

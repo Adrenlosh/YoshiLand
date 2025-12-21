@@ -96,11 +96,11 @@ namespace YoshiLand.Screens
         {
             if (GameControllerSystem.AttackPressed() && _stage != null)
             {
-                Game.LoadScreen(new StageEnterScreen(Game, _stage), new MaskTransition(GraphicsDevice, Content, TransitionType.Out, 1.8f));
+                Game.Screens.ReplaceScreen(new StageEnterScreen(Game, _stage), new MaskTransition(GraphicsDevice, Content, TransitionType.Out, 1.8f));
             }
             else if(GameControllerSystem.BackPressed())
             {
-                Game.LoadScreen(new TitleScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
+                Game.Screens.ReplaceScreen(new TitleScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
             }
             GameObjectsSystem.Update(gameTime);
             _gameSceneRenderer.Update(gameTime, GameObjectsSystem.MapPlayer.Position);

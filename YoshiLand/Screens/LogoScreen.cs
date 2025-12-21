@@ -54,7 +54,7 @@ namespace YoshiLand.Screens
             }
             if (_elapsedTime >= DisplayTime && _showLogo)
             {
-                Game.LoadScreen(new TitleScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
+                Game.Screens.ReplaceScreen(new TitleScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
             }
         }
     }

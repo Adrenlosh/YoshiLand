@@ -27,6 +27,12 @@ namespace YoshiLand.Systems
             _timer = 0;
         }
 
+        public static void ResetVibration()
+        {
+            IsVibrating = false;
+            _timer = 0;
+        }
+
         public static void Update(GameTime gameTime)
         {
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;

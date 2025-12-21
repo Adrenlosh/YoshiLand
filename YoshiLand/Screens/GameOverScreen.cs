@@ -28,12 +28,12 @@ namespace YoshiLand.Screens
 
         private void OnTitleMenuButtonClicked(object sender, EventArgs e)
         {
-            Game.LoadScreen(new TitleScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
+            Game.Screens.ShowScreen(new TitleScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
         }
 
         private void OnContinueButtonClicked(object sender, EventArgs e)
         {
-            Game.LoadScreen(new MapScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
+            Game.Screens.ShowScreen(new MapScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
         }
 
         public override void Initialize()

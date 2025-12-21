@@ -21,8 +21,10 @@ namespace YoshiLand //TODO:屏幕逻辑更新
     public class GameMain : Game
     {
         private GraphicsDeviceManager _graphicsDeviceManager;
-        private ScreenManager _screenManager;
         private SpriteBatch _spriteBatch;
+        private readonly ScreenManager _screenManager;
+
+        public ScreenManager Screens => _screenManager;
 
         public static UiSystem UiSystem { get; set; }
 
@@ -88,10 +90,11 @@ namespace YoshiLand //TODO:屏幕逻辑更新
             SongSystem.Initialize(Content, engine, playbackDevice);
 
 #if !DEBUG
-            LoadScreen(new LogoScreen(this));
+            _screenManager.ShowScreen(new LogoScreen(this));
 #else
             //LoadScreen(new TitleScreen(this));
-            LoadScreen(new GamingScreen(this, StageSystem.GetStageByName("grassland1")));
+            //LoadScreen(new GamingScreen(this, StageSystem.GetStageByName("grassland1")));
+            _screenManager.ShowScreen(new TitleScreen(this));
 #endif
             base.LoadContent();
         }
@@ -111,17 +114,17 @@ namespace YoshiLand //TODO:屏幕逻辑更新
             base.UnloadContent();
         }
 
-        public void LoadScreen(GameScreen screen, Transition transition = null)
-        {
-            if (transition != null)
-            {
-                _screenManager.LoadScreen(screen, transition);
-            }
-            else
-            {
-                _screenManager.LoadScreen(screen);
-            }
-        }
+        //public void LoadScreen(GameScreen screen, Transition transition = null)
+        //{
+        //    if (transition != null)
+        //    {
+        //        _screenManager.LoadScreen(screen, transition);
+        //    }
+        //    else
+        //    {
+        //        _screenManager.LoadScreen(screen);
+        //    }
+        //}
 
         public float GetUIScale(ViewportAdapter viewportAdapter)
         {

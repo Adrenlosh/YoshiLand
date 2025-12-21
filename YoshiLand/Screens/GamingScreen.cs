@@ -79,6 +79,12 @@ namespace YoshiLand.Screens
         public override void Update(GameTime gameTime)
         {
             var elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (GameControllerSystem.StartPressed())
+            {
+                SFXSystem.Play("pause");
+                SongSystem.Pause();
+                Game.Screens.ShowScreen(new PauseScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 0.3f));
+            }
 
             if (_shouldMovePlayer)
             {
@@ -110,8 +116,8 @@ namespace YoshiLand.Screens
             if (!isTransitioning)
             {
                 var screenBounds = _gameSceneRenderer.GetScreenBounds();
-                //GameObjectsSystem.InactivateObejcts(screenBounds);
-                //GameObjectsSystem.ActivateObjects(screenBounds);
+                GameObjectsSystem.InactivateObejcts(screenBounds);
+                GameObjectsSystem.ActivateObjects(screenBounds);
                 GameObjectsSystem.Update(gameTime);
                 _interactionSystem.Update(gameTime);
 
@@ -136,7 +142,7 @@ namespace YoshiLand.Screens
         {
             if (GameControllerSystem.BackPressed())
             {
-                Game.LoadScreen(new MapScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
+                Game.Screens.ReplaceScreen(new MapScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
             }
         }
 
@@ -228,7 +234,7 @@ namespace YoshiLand.Screens
             }
             SFXSystem.Play("exit");
             GameObjectsSystem.Player.CanHandleInput = true;
-            Game.LoadScreen(new MapScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
+            Game.Screens.ReplaceScreen(new MapScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
         }
 
         private void OnFadeKeep()
@@ -247,11 +253,11 @@ namespace YoshiLand.Screens
         {
             if (GameMain.PlayerStatus.LifeLeft > 0)
             {
-                Game.LoadScreen(new MapScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
+                Game.Screens.ReplaceScreen(new MapScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
             }
             else
             {
-                Game.LoadScreen(new GameOverScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
+                Game.Screens.ReplaceScreen(new GameOverScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
             }
         }
 

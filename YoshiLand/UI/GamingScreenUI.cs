@@ -1,10 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
 using MLEM.Ui.Elements;
 using MonoGame.Extended.Screens.Transitions;
 using System;
-using System.Diagnostics;
-using YoshiLand.Enums;
 using YoshiLand.Systems;
 using YoshiLand.Transitions;
 using YoshiLand.UI.CustomControls;
@@ -108,17 +105,17 @@ namespace YoshiLand.UI
 
         private void HandleInput()
         {
-            if (GameControllerSystem.StartPressed() && HandlePause && !IsReadingMessage)
-            {
-                if (IsPaused)
-                {
-                    Unpause();
-                }
-                else
-                {
-                    Pause();
-                }
-            }
+            //if (GameControllerSystem.StartPressed() && HandlePause && !IsReadingMessage)
+            //{
+            //    if (IsPaused)
+            //    {
+            //        Unpause();
+            //    }
+            //    else
+            //    {
+            //        Pause();
+            //    }
+            //}
         }
 
         public void Update(GameTime gameTime, TimeSpan? remainingTime = null)

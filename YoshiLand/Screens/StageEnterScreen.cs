@@ -63,7 +63,7 @@ namespace YoshiLand.Screens
             if(_timer >= DisplayDuration)
             {
                 _timer = -1f;
-                Game.LoadScreen(new GamingScreen(Game, _stage), new MaskTransition(GraphicsDevice, Content, TransitionType.In, 1.8f));
+                Game.Screens.ReplaceScreen(new GamingScreen(Game, _stage), new MaskTransition(GraphicsDevice, Content, TransitionType.In, 1.8f));
             }
         }
     }

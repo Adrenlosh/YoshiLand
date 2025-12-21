@@ -43,7 +43,7 @@ namespace YoshiLand.Screens
         private void InitializeUI()
         {
             _ui = new TitleScreenUI();
-            _ui.StartButtonClicked += (s, e) => Game.LoadScreen(new MapScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
+            _ui.StartButtonClicked += (s, e) => Game.Screens.ReplaceScreen(new MapScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
             GameMain.UiSystem.Add("Root", _ui);
         }
 
