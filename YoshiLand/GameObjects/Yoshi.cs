@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Graphics;
 using MonoGame.Extended.Tiled;
 using System;
+using System.Diagnostics;
 using YoshiLand.Enums;
 using YoshiLand.Interfaces;
 using YoshiLand.Models;
@@ -17,6 +19,13 @@ namespace YoshiLand.GameObjects
         Retracting
     }
 
+    public enum FloatState
+    {
+        None,
+        Floating,
+        Falling
+    }
+
     public enum PlummetState
     {
         None,
@@ -24,8 +33,21 @@ namespace YoshiLand.GameObjects
         FastFall
     }
 
-    public class Yoshi : GameObject, IDamageable //TODO:飘浮、重摔
+    public class Yoshi : GameObject, IDamageable //TODO:飘浮
     {
+        private const float MaxSpeed = 5f;
+        private const float Acceleration = 0.5f;
+        private const float BaseJumpForce = 7f;
+        private const float Gravity = 0.5f;
+        private const float PlummetGravity = 1f;
+        private const float ThrowingAnimationDuration = 0.5f;
+        private const float MaxFloatTime = 1.2f;
+        private const float MaxJumpHoldTime = 0.3f;
+        private const float FloatActivationThreshold = 0.15f;
+        private const float FloatForce = 0.2f;
+
+        private const float PlummetStage1Duration = 0.5f;
+
         private const float TongueSpeed = 300f;
         private const float MaxTongueLength = 50f;
         private const float CrosshairRadius = 85f;
@@ -48,13 +70,23 @@ namespace YoshiLand.GameObjects
         private bool _hasThrownEgg = false;
         private float _throwingAnimationTimer = 0f;
 
-        private int _lastDirection;
+        private float _plummetTimer = 0;
+        private PlummetState _plummetStage = PlummetState.None;
+
+        private int _lastDirection = 1;
 
         private bool _isSquating = false;
         private bool _isLookingUp = false;
         private bool _isMouthing = false;
         private bool _isSpitting = false;
         private bool _isHoldingEgg = false;
+        private bool _isPlummeting = false;
+        private bool _isFloating = false;
+        private float _floatTime;
+        private bool _isJumping = false;
+        private bool _canJump = true;
+        private bool _jumpInitiated = false;
+        private float _jumpHoldTime = 0f;
         public override Point SpriteSize => _yoshiSprite.Size;
         public override Vector2 CenterBottomPosition
         {
@@ -156,7 +188,7 @@ namespace YoshiLand.GameObjects
                     _isHoldingEgg = !_isHoldingEgg;
                 }
             }
-            if (GameControllerSystem.AttackPressed() && _tongueState == 0 && !_isSquating)//!_isHoldingEgg && !_isSquating// && !_isFloating && !_hasThrownEgg && !_isTurning)
+            if (GameControllerSystem.AttackPressed() && _tongueState == 0 && !_isSquating && !_isPlummeting)//!_isHoldingEgg && !_isSquating// && !_isFloating && !_hasThrownEgg && !_isTurning)
             {
                 if (!_isMouthing)
                 {
@@ -196,6 +228,10 @@ namespace YoshiLand.GameObjects
                     }
                 }
             }
+            if (GameControllerSystem.MoveDown() && !IsOnGround && !_isHoldingEgg && !_hasThrownEgg)
+            {
+                _isPlummeting = true;
+            }
             if (GameControllerSystem.MoveDown() && IsOnGround)
             {
                 _isSquating = true;
@@ -211,21 +247,97 @@ namespace YoshiLand.GameObjects
             else
             {
                 _isLookingUp = false;
-            }
-            if (GameControllerSystem.JumpPressed() && !_isSquating)
-            {
-                Physics.ApplyJump(10f);
-                SFXSystem.Play("yoshi-jump");
-            }
+            }            
             if (GameControllerSystem.MoveLeft() && !_isSquating && !_isLookingUp)
             {
-                Physics.ApplyAcceleration(-0.5f, 5); //TODO:用常量替代数值
+                Physics.ApplyAcceleration(-Acceleration, MaxSpeed);
                 currentDirection = -1;
+                _hasThrownEgg = false;
             }
             if (GameControllerSystem.MoveRight() && !_isSquating && !_isLookingUp)
             {
-                Physics.ApplyAcceleration(0.5f, 5);
+                Physics.ApplyAcceleration(Acceleration, MaxSpeed);
                 currentDirection = 1;
+                _hasThrownEgg = false;
+            }
+
+            bool isJumpButtonPressed = GameControllerSystem.JumpPressed();
+            bool isJumpButtonHeld = GameControllerSystem.JumpHeld();
+            if (isJumpButtonPressed && !_isSquating && IsOnGround && _canJump)
+            {
+                Physics.ApplyJump(BaseJumpForce);
+                _isJumping = true;
+                _jumpInitiated = true;
+                _canJump = false;
+                _jumpHoldTime = 0f;
+                SFXSystem.Play("yoshi-jump");
+            }
+            if (_isJumping && _jumpInitiated && _jumpHoldTime < MaxJumpHoldTime && Velocity.Y < 0)
+            {
+                if (isJumpButtonHeld)
+                {
+                    _jumpHoldTime += elapsedTime;
+                    float jumpProgress = _jumpHoldTime / MaxJumpHoldTime;
+                    Physics.ApplyJump(BaseJumpForce * (1 - jumpProgress * 0.5f), true);
+                }
+                else
+                {
+                    _jumpInitiated = false;
+                }
+            }
+            if (_isJumping && !IsOnGround && Velocity.Y >= 0 && isJumpButtonHeld && !_isFloating && _jumpHoldTime >= FloatActivationThreshold && !_isHoldingEgg)
+            {
+                _isFloating = true;
+                _floatTime = 0f;
+            }
+            if (_isFloating && !_isHoldingEgg)
+            {
+                _floatTime += elapsedTime;
+
+                if (_floatTime < MaxFloatTime && isJumpButtonHeld)
+                {
+                    Physics.Gravity = 0.3f;
+                    if (_floatTime < 0.3f)
+                    {
+                        
+                        float targetVelocity = 1.5f;
+                        Physics.ApplyJump(MathHelper.Lerp(Velocity.Y, targetVelocity, 0.1f), true);
+                    }
+                    else if (_floatTime < 1.0f)
+                    {
+                        Physics.ApplyJump(FloatForce, true);
+                        SFXSystem.Play("yoshi-float");
+                    }
+                    else
+                    {
+                        Physics.ApplyJump(Math.Min(Velocity.Y + Gravity * 0.3f, 1.2f), true);
+                        SFXSystem.Stop("yoshi-float");
+                    }
+                }
+                else
+                {
+                    Physics.Gravity = Gravity;
+                    _isFloating = false;
+                    _isJumping = false;
+                    _jumpInitiated = false;
+                    _floatTime = 0;
+                }
+            }
+            if (_isFloating && !isJumpButtonHeld)
+            {
+                _isFloating = false;
+                _isJumping = false;
+                _jumpInitiated = false;
+                _floatTime = 0;
+            }
+
+            if (IsOnGround)
+            {
+                _isFloating = false;
+                _isJumping = false;
+                _jumpInitiated = false;
+                _jumpHoldTime = 0f;
+                _canJump = true;
             }
             if (currentDirection != 0 && !_isHoldingEgg && _tongueState == 0)
             {
@@ -267,6 +379,25 @@ namespace YoshiLand.GameObjects
             {
                 SetYoshiAnimation("squat", false);
             }
+            else if(_hasThrownEgg)
+            {
+                SetYoshiAnimation("throw");
+            }
+            else if (_isPlummeting)
+            {
+                if (_plummetStage == PlummetState.TurnAround)
+                    SetYoshiAnimation("plummet1");
+                else if (_plummetStage == PlummetState.FastFall)
+                    SetYoshiAnimation("plummet2");
+            }
+            else if (_isFloating)
+            {
+                // 浮动状态
+                if (_floatTime >= 0.3f && _floatTime < 1.0f && !_isHoldingEgg)
+                    SetYoshiAnimation("float");
+                else if (!_isHoldingEgg)
+                    SetYoshiAnimation("fall");
+            }
             else
             {
                 if (_isHoldingEgg)
@@ -276,7 +407,7 @@ namespace YoshiLand.GameObjects
                         SetYoshiAnimation("hold-egg");
                     else
                         SetYoshiAnimation("hold-egg-walk");
-                    return; 
+                    return;
                 }
                 if (Velocity.X != 0)
                 {
@@ -349,8 +480,42 @@ namespace YoshiLand.GameObjects
             {
                 UpdateTongueState(gameTime);
             }
-            Physics.ApplyPhysics(gameTime);
-            UpdateAnimation();
+            if (_hasThrownEgg)
+            {
+                _throwingAnimationTimer += elapsedTime;
+                if (_throwingAnimationTimer >= ThrowingAnimationDuration)
+                {
+                    _hasThrownEgg = false;
+                    _throwingAnimationTimer = 0f;
+                }
+            }
+            if (_isPlummeting && !IsOnGround)
+            {
+                _plummetTimer += elapsedTime;
+
+                if (_plummetTimer > 0 && _plummetTimer < PlummetStage1Duration) //阶段1
+                {
+                    _plummetStage = PlummetState.TurnAround;
+                    Physics.HasGravity = false;
+                }
+                else //阶段2
+                {
+                    _plummetStage = PlummetState.FastFall;
+                    Physics.HasGravity = true;
+                    Physics.Gravity = PlummetGravity;
+                }
+            }
+            else if(_isPlummeting && IsOnGround)
+            {
+                _isPlummeting = false;
+                _plummetTimer = 0;
+                _plummetStage = PlummetState.None;
+                Physics.Gravity = Gravity;
+                SFXSystem.Play("plummet");
+                VibrationSystem.SetVibration(0.1f, 0.1f);
+                OnPlummeted.Invoke(Position);
+            }
+
             if (!_isHoldingEgg)
             {
                 if (_lastDirection == 1)
@@ -367,6 +532,8 @@ namespace YoshiLand.GameObjects
             {
                 UpdateCrosshair(gameTime);
             }
+            Physics.ApplyPhysics(gameTime);
+            UpdateAnimation();
             _yoshiSprite.Update(gameTime);
             
         }

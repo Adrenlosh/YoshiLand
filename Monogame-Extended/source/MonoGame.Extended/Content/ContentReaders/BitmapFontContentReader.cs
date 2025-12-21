@@ -26,6 +26,8 @@ public class BitmapFontContentReader : ContentTypeReader<BitmapFont>
         var fontName = reader.ReadString();
         var fontSize = reader.ReadInt16();
         var lineHeight = reader.ReadUInt16();
+        var spacingHoriz = reader.ReadSByte();
+        var spacingVert = reader.ReadSByte();
 
         var characterCount = reader.ReadInt32();
         var characters = new Dictionary<int, BitmapFontCharacter>();
@@ -57,10 +59,17 @@ public class BitmapFontContentReader : ContentTypeReader<BitmapFont>
 
             if (characters.TryGetValue((int)first, out var character))
             {
-                character.Kernings.Add((int)second, amount);
+                character.Kernings[(int)second] = amount;
             }
         }
 
-        return new BitmapFont(fontName, fontSize, lineHeight, characters.Values);
+        return new BitmapFont(
+            fontName,
+            fontSize,
+            lineHeight,
+            spacingHoriz,
+            spacingVert,
+            characters.Values
+        );
     }
 }

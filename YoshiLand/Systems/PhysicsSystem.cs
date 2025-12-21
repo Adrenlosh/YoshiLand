@@ -9,9 +9,10 @@ using YoshiLand.Models;
 
 namespace YoshiLand.Systems
 {
-    public struct PhysicsConfig
+    public class PhysicsSystem
     {
-        public PhysicsConfig() { }
+        private GameObject _targetObject;
+        private TiledMap _tilemap;
 
         public float Gravity { get; set; } = 0.5f;
         public float MaxFallSpeed { get; set; } = 12f;
@@ -20,14 +21,20 @@ namespace YoshiLand.Systems
         public float MaxHorizontalSpeed { get; set; } = 8f;
         public float Acceleration { get; set; } = 0.5f;
         public float Deceleration { get; set; } = 0.5f;
-    }
 
-    public class PhysicsSystem
-    {
-        private GameObject _targetObject;
-        private TiledMap _tilemap;
-
-        public PhysicsConfig Config { get; set; } = new PhysicsConfig();
+        public bool HasGravity
+        {
+            get => field;
+            set
+            {
+                field = value;
+                if (!field)
+                {
+                    _targetObject.Velocity = Vector2.Zero;
+                }
+            }
+        } = true;
+        
 
         public PhysicsSystem(GameObject targetObject, TiledMap tilemap)
         {
@@ -40,7 +47,7 @@ namespace YoshiLand.Systems
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             _targetObject.IsOnGround = CheckOnGround();
             ApplyFriction(elapsedTime);
-            ApplyGravity(elapsedTime);
+            if(HasGravity) ApplyGravity(elapsedTime);
             ApplyCollisions(elapsedTime);
         }
 
@@ -49,8 +56,8 @@ namespace YoshiLand.Systems
             if (_targetObject.Velocity.X == 0) return;
 
             float friction = _targetObject.IsOnGround ?
-                Config.GroundFriction : Config.AirFriction;
-            float reduction = Config.Deceleration * friction * deltaTime * 60f;
+                GroundFriction : AirFriction;
+            float reduction = Deceleration * friction * deltaTime * 60f;
             if (_targetObject.Velocity.X > 0)
             {
                 _targetObject.Velocity = new Vector2(
@@ -69,8 +76,8 @@ namespace YoshiLand.Systems
         {
             if (!_targetObject.IsOnGround)
             {
-                float newVelocityY = _targetObject.Velocity.Y + Config.Gravity * deltaTime * 60f;
-                newVelocityY = Math.Min(newVelocityY, Config.MaxFallSpeed);
+                float newVelocityY = _targetObject.Velocity.Y + Gravity * deltaTime * 60f;
+                newVelocityY = Math.Min(newVelocityY, MaxFallSpeed);
                 _targetObject.Velocity = new Vector2(_targetObject.Velocity.X, newVelocityY);
             }
             else if (_targetObject.Velocity.Y > 0)
@@ -223,11 +230,11 @@ namespace YoshiLand.Systems
             return _targetObject.IsCollidingWithTile(testRectangle, out TileCollisionResult collisionResult) && !collisionResult.TileType.HasFlag(TileType.Penetrable);
         }
 
-        public void ApplyJump(float jumpStrength)
+        public void ApplyJump(float jumpForce, bool ignoreGroundCheck = false)
         {
-            if (_targetObject.IsOnGround)
+            if (ignoreGroundCheck || _targetObject.IsOnGround)
             {
-                _targetObject.Velocity = new Vector2(_targetObject.Velocity.X, -jumpStrength);
+                _targetObject.Velocity = new Vector2(_targetObject.Velocity.X, -jumpForce);
                 _targetObject.IsOnGround = false;
             }
         }

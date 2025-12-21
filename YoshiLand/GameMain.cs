@@ -16,7 +16,7 @@ using YoshiLand.Screens;
 using YoshiLand.Status;
 using YoshiLand.Systems;
 
-namespace YoshiLand
+namespace YoshiLand //TODO:屏幕逻辑更新
 {
     public class GameMain : Game
     {
@@ -36,7 +36,6 @@ namespace YoshiLand
             {
                 PreferredBackBufferWidth = GlobalConfig.VirtualResolution_Width,
                 PreferredBackBufferHeight = GlobalConfig.VirtualResolution_Height,
-                PreferHalfPixelOffset = true,
             };
             _graphicsDeviceManager.ApplyChanges();
             _screenManager = new ScreenManager();
@@ -72,6 +71,7 @@ namespace YoshiLand
         {
             UiSystem.GlobalScale = GetUIScale(ViewportAdapter);
             GameControllerSystem.Update();
+            VibrationSystem.Update(gameTime);
             SFXSystem.Update(gameTime);
             UiSystem.Update(gameTime);
             base.Update(gameTime);
@@ -90,7 +90,7 @@ namespace YoshiLand
 #if !DEBUG
             LoadScreen(new LogoScreen(this));
 #else
-           // LoadScreen(new TitleScreen(this));
+            //LoadScreen(new TitleScreen(this));
             LoadScreen(new GamingScreen(this, StageSystem.GetStageByName("grassland1")));
 #endif
             base.LoadContent();

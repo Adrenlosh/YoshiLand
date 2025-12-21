@@ -80,7 +80,7 @@ namespace YoshiLand.Screens
             _spriteBatch.Begin(samplerState: SamplerState.PointWrap);
             Rectangle screenBounds = GraphicsDevice.PresentationParameters.Bounds;
             Rectangle sourceRect = new Rectangle(0, 0, screenBounds.Width, screenBounds.Height);
-            _spriteBatch.Draw(_backgroundPattern, screenBounds, sourceRect, Color.OrangeRed);
+            _spriteBatch.Draw(_backgroundPattern, screenBounds, sourceRect, Color.White);
             _spriteBatch.End();
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: GameMain.ViewportAdapter.GetScaleMatrix());
             _spriteBatch.FillRectangle(new Rectangle(45, 45, _renderTarget.Width, _renderTarget.Height), Color.Black * 0.5f);

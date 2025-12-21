@@ -80,7 +80,6 @@ namespace MonoGame.Extended.ECS
         {
             _changedEntities.Add(entityId);
             _entityToComponentBits[entityId] = _componentManager.CreateComponentBits(entityId);
-            EntityChanged?.Invoke(entityId);
         }
 
         public override void Update(GameTime gameTime)
@@ -94,7 +93,6 @@ namespace MonoGame.Extended.ECS
 
             foreach (var entityId in _changedEntities)
             {
-                _entityToComponentBits[entityId] = _componentManager.CreateComponentBits(entityId);
                 EntityChanged?.Invoke(entityId);
             }
 

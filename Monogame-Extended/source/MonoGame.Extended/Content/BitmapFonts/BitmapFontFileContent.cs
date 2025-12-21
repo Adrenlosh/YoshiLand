@@ -47,8 +47,8 @@ public sealed class BitmapFontFileContent
         [FieldOffset(8)] public byte PaddingRight;
         [FieldOffset(9)] public byte PaddingDown;
         [FieldOffset(10)] public byte PaddingLeft;
-        [FieldOffset(11)] public byte SpacingHoriz;
-        [FieldOffset(12)] public byte SpacingVert;
+        [FieldOffset(11)] public sbyte SpacingHoriz;
+        [FieldOffset(12)] public sbyte SpacingVert;
         [FieldOffset(13)] public byte Outline;
     }
 
@@ -57,7 +57,7 @@ public sealed class BitmapFontFileContent
     {
         public const int StructSize = 20;
 
-        [FieldOffset(0)] public uint ID;
+        [FieldOffset(0)] public int ID;
         [FieldOffset(4)] public ushort X;
         [FieldOffset(6)] public ushort Y;
         [FieldOffset(8)] public ushort Width;

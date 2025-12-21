@@ -266,10 +266,48 @@ namespace MonoGame.Extended
             Zoom += deltaZoom;
         }
 
+        /// <summary>
+        /// Increases the camera's zoom level while maintaining a specified world position as the zoom center.
+        /// </summary>
+        /// <param name="deltaZoom">The amount to increase the zoom by.</param>
+        /// <param name="zoomCenter">
+        /// The world position to use as the zoom center. This point will remain fixed in screen space
+        /// as the zoom changes.
+        /// </param>
+        public void ZoomIn(float deltaZoom, Vector2 zoomCenter)
+        {
+            float previousZoom = Zoom;
+            Zoom += deltaZoom;
+
+            if (Zoom != previousZoom)
+            {
+                Position += (zoomCenter - Origin - Position) * ((Zoom - previousZoom) / Zoom);
+            }
+        }
+
         /// <inheritdoc/>
         public override void ZoomOut(float deltaZoom)
         {
             Zoom -= deltaZoom;
+        }
+
+        /// <summary>
+        /// Decreases the camera's zoom level while maintaining a specified world position as the zoom center.
+        /// </summary>
+        /// <param name="deltaZoom">The amount to decrease the zoom by.</param>
+        /// <param name="zoomCenter">
+        /// The world position to use as the zoom center. This point will remain fixed in screen space
+        /// as the zoom changes.
+        /// </param>
+        public void ZoomOut(float deltaZoom, Vector2 zoomCenter)
+        {
+            float previousZoom = Zoom;
+            Zoom -= deltaZoom;
+
+            if (Zoom != previousZoom)
+            {
+                Position += (zoomCenter - Origin - Position) * ((Zoom - previousZoom) / Zoom);
+            }
         }
 
         /// <inheritdoc/>
@@ -310,8 +348,16 @@ namespace MonoGame.Extended
         /// <inheritdoc/>
         public override Vector2 WorldToScreen(Vector2 worldPosition)
         {
-            var viewport = _viewportAdapter.Viewport;
-            return Vector2.Transform(worldPosition + new Vector2(viewport.X, viewport.Y), GetViewMatrix());
+            Vector2 screenPosition = Vector2.Transform(worldPosition, GetViewMatrix());
+
+            // For scaling viewport adapters, the viewport offset is part of the coordinate transformation
+            if (_viewportAdapter is ScalingViewportAdapter)
+            {
+                var viewport = _viewportAdapter.Viewport;
+                screenPosition += new Vector2(viewport.X, viewport.Y);
+            }
+
+            return screenPosition;
         }
 
         /// <summary>
@@ -328,9 +374,14 @@ namespace MonoGame.Extended
         /// <inheritdoc/>
         public override Vector2 ScreenToWorld(Vector2 screenPosition)
         {
-            var viewport = _viewportAdapter.Viewport;
-            return Vector2.Transform(screenPosition - new Vector2(viewport.X, viewport.Y),
-                Matrix.Invert(GetViewMatrix()));
+            // For scaling viewport adapters, the viewport offset is part of the coordinate transformation
+            if (_viewportAdapter is ScalingViewportAdapter)
+            {
+                var viewport = _viewportAdapter.Viewport;
+                screenPosition -= new Vector2(viewport.X, viewport.Y);
+            }
+
+            return Vector2.Transform(screenPosition, Matrix.Invert(GetViewMatrix()));
         }
 
         /// <summary>

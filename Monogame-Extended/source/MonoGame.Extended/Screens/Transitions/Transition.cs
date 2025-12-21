@@ -3,7 +3,9 @@ using Microsoft.Xna.Framework;
 
 namespace MonoGame.Extended.Screens.Transitions
 {
-    public enum TransitionState { In, Out }
+    public enum TransitionState { In, Out,
+        Keep
+    }
 
     public abstract class Transition : IDisposable
     {

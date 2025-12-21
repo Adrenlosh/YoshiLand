@@ -1,8 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
 using MLEM.Ui.Elements;
+using MonoGame.Extended.Screens.Transitions;
 using System;
+using System.Diagnostics;
 using YoshiLand.Enums;
 using YoshiLand.Systems;
+using YoshiLand.Transitions;
 using YoshiLand.UI.CustomControls;
 
 namespace YoshiLand.UI
@@ -10,12 +14,10 @@ namespace YoshiLand.UI
 
     public class GamingScreenUI : Panel
     {
-        private const float FadeDuration = 0.3f;
-        private float _fadeTimer = -1f;
-        private int _alpha;
         private TimeSpan? _remainingTime = TimeSpan.FromSeconds(1);
-        private FadeStatus _fadeStatus = FadeStatus.None;
         private MessageBox _messageBox;
+
+        private TransitionTimer _timer = new TransitionTimer(0.6f);
 
         private Paragraph _LifeLeftParagraph;
         private Paragraph _EggParagraph;
@@ -65,6 +67,20 @@ namespace YoshiLand.UI
             AddChild(paragraphs);
             AddChild(_HealthParagraph);
             AddChild(_messageBox);
+
+            _timer.StateChanged += Timer_StateChanged;
+            _timer.Completed += Timer_Completed;
+        }
+
+        private void Timer_Completed(object sender, EventArgs e)
+        {
+            _pausePanel.IsHidden = true;
+            IsPaused = false;
+        }
+
+        private void Timer_StateChanged(object sender, EventArgs e)
+        {
+            _timer.Pause();
         }
 
         public void ShowMessageBox(string messageID)
@@ -78,8 +94,7 @@ namespace YoshiLand.UI
             SongSystem.Pause();
             SFXSystem.Play("pause");
             IsPaused = true;
-            _fadeTimer = 0f;
-            _fadeStatus = FadeStatus.In;
+            _timer.Start();
             _pausePanel.IsHidden = false;
         }
 
@@ -88,8 +103,7 @@ namespace YoshiLand.UI
             SongSystem.Resume();
             SFXSystem.Play("pause");
             IsPaused = false;
-            _fadeTimer = 0f;
-            _fadeStatus = FadeStatus.Out;
+            _timer.Resume();
         }
 
         private void HandleInput()
@@ -117,35 +131,12 @@ namespace YoshiLand.UI
             {
                 _messageBox.Update();
             }
-            float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (_fadeTimer >= 0f)
+            _timer.Update(gameTime);
+            if(_timer.State == TransitionState.Out || _timer.State == TransitionState.In)
             {
-                _fadeTimer += elapsedTime;
-
-                if (_fadeTimer >= FadeDuration)
-                {
-                    _fadeTimer = -1f;
-                    if (_fadeStatus == FadeStatus.Out)
-                    {
-                        _alpha = 0;
-                        _pausePanel.IsHidden = true;
-                    }
-                    _fadeStatus = FadeStatus.None;
-                }
-                else
-                {
-                    float progress = _fadeTimer / FadeDuration;
-                    if (_fadeStatus == FadeStatus.In)
-                    {
-                        _alpha = (int)(200 * progress);
-                    }
-                    else if (_fadeStatus == FadeStatus.Out)
-                    {
-                        _alpha = (int)(200 * (1 - progress));
-                    }
-                    _pausePanel.DrawColor = new Color(Color.Black, _alpha);
-                }
+                _pausePanel.DrawColor = new Color(Color.Black, _timer.Value);
             }
+
         }
     }
 }
