@@ -29,6 +29,7 @@ namespace YoshiLand.Screens
         private bool _shouldMovePlayer = false;
         private bool _isPlayerDie = false;
         private bool _isTransitioning = false;
+        private bool _handlePause = true;
         private KeyValuePair<string, string> _spawnPoint;
 
         public new GameMain Game => (GameMain)base.Game;
@@ -79,10 +80,8 @@ namespace YoshiLand.Screens
         public override void Update(GameTime gameTime)
         {
             var elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (GameControllerSystem.StartPressed())
+            if (GameControllerSystem.StartPressed() && _handlePause)
             {
-                SFXSystem.Play("pause");
-                SongSystem.Pause();
                 Game.Screens.ShowScreen(new PauseScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 0.3f));
             }
 
@@ -91,7 +90,7 @@ namespace YoshiLand.Screens
                 GameObjectsSystem.Player.Velocity = new Vector2(1f, 1);
             }
 
-            if (_ui.IsReadingMessage || _ui.IsPaused)
+            if (_ui.IsReadingMessage)
             {
                 _ui.Update(gameTime, _remainingTime);
                 CheckBackButton();
@@ -148,7 +147,7 @@ namespace YoshiLand.Screens
 
         private void UpdateTimer(GameTime gameTime)
         {
-            if (!_ui.IsReadingMessage && !_ui.IsPaused && !_isPlayerDie && _gameSceneRenderer.FadeStatus == FadeStatus.None)
+            if (!_ui.IsReadingMessage && !_isPlayerDie && _gameSceneRenderer.FadeStatus == FadeStatus.None)
             {
                 _remainingTime -= gameTime.ElapsedGameTime;
                 if (_remainingTime <= TimeSpan.Zero)
@@ -264,7 +263,7 @@ namespace YoshiLand.Screens
         private void OnDie()
         {
             SongSystem.Stop();
-            _ui.HandlePause = false;
+            _handlePause = false;
             _isPlayerDie = true;
             _cameraLockPosition = GameObjectsSystem.Player.Position;
         }

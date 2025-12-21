@@ -24,6 +24,8 @@ namespace YoshiLand.Screens
 
         public override void Initialize()
         {
+            SFXSystem.Play("pause");
+            SongSystem.Pause();
             base.Initialize();
         }
 
@@ -31,10 +33,12 @@ namespace YoshiLand.Screens
         {
             _ui = new PauseScreenUI();
             GameMain.UiSystem.Add("PausePanel", _ui);
+            GameMain.UiSystem.Get("Root")?.Element.IsHidden = true;
         }
         public override void UnloadContent()
         {
             GameMain.UiSystem.Remove("PausePanel");
+            GameMain.UiSystem.Get("Root")?.Element.IsHidden = false;
             base.UnloadContent();
         }
 

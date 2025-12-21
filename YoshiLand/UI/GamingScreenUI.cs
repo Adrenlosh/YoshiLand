@@ -14,21 +14,14 @@ namespace YoshiLand.UI
         private TimeSpan? _remainingTime = TimeSpan.FromSeconds(1);
         private MessageBox _messageBox;
 
-        private TransitionTimer _timer = new TransitionTimer(0.6f);
-
         private Paragraph _LifeLeftParagraph;
         private Paragraph _EggParagraph;
         private Paragraph _CoinParagraph;
         private Paragraph _ScoreParagraph;
         private Paragraph _TimeParagraph;
         private Paragraph _HealthParagraph;
-        private Panel _pausePanel;
 
         public bool IsReadingMessage { get; set; }
-
-        public bool IsPaused { get; set; } = false;
-
-        public bool HandlePause { get; set; } = true;
 
         public event Action OnMessageBoxClosed;
         public event Action OnCancelPause;
@@ -49,9 +42,6 @@ namespace YoshiLand.UI
             paragraphs.AddChild(_CoinParagraph);
             paragraphs.AddChild(_ScoreParagraph);
             paragraphs.AddChild(_TimeParagraph);
-            
-            _pausePanel = new Panel(MLEM.Ui.Anchor.Center, Size){ IsHidden = true, DrawColor = new Color(Color.Black, 0.7f) };
-            _pausePanel.AddChild(new Paragraph(MLEM.Ui.Anchor.Center, 1, Language.Strings.Paused, true));
 
             _messageBox = new MessageBox();
             _messageBox.OnClosed += () =>
@@ -60,24 +50,9 @@ namespace YoshiLand.UI
                 OnMessageBoxClosed?.Invoke();
             };
 
-            AddChild(_pausePanel);
             AddChild(paragraphs);
             AddChild(_HealthParagraph);
             AddChild(_messageBox);
-
-            _timer.StateChanged += Timer_StateChanged;
-            _timer.Completed += Timer_Completed;
-        }
-
-        private void Timer_Completed(object sender, EventArgs e)
-        {
-            _pausePanel.IsHidden = true;
-            IsPaused = false;
-        }
-
-        private void Timer_StateChanged(object sender, EventArgs e)
-        {
-            _timer.Pause();
         }
 
         public void ShowMessageBox(string messageID)
@@ -86,41 +61,8 @@ namespace YoshiLand.UI
             _messageBox.Show(Language.Messages.ResourceManager.GetString(messageID));
         }
 
-        public void Pause()
-        {
-            SongSystem.Pause();
-            SFXSystem.Play("pause");
-            IsPaused = true;
-            _timer.Start();
-            _pausePanel.IsHidden = false;
-        }
-
-        public void Unpause()
-        {
-            SongSystem.Resume();
-            SFXSystem.Play("pause");
-            IsPaused = false;
-            _timer.Resume();
-        }
-
-        private void HandleInput()
-        {
-            //if (GameControllerSystem.StartPressed() && HandlePause && !IsReadingMessage)
-            //{
-            //    if (IsPaused)
-            //    {
-            //        Unpause();
-            //    }
-            //    else
-            //    {
-            //        Pause();
-            //    }
-            //}
-        }
-
         public void Update(GameTime gameTime, TimeSpan? remainingTime = null)
         {
-            HandleInput();
             _remainingTime = remainingTime;
             _HealthParagraph.TextColor = GameObjectsSystem.Player.Health < 2 ? Color.Red : Color.Yellow;
             _TimeParagraph.TextColor = _remainingTime.Value.TotalSeconds <= 100 ? Color.Red : Color.Yellow;
@@ -128,12 +70,6 @@ namespace YoshiLand.UI
             {
                 _messageBox.Update();
             }
-            _timer.Update(gameTime);
-            if(_timer.State == TransitionState.Out || _timer.State == TransitionState.In)
-            {
-                _pausePanel.DrawColor = new Color(Color.Black, _timer.Value);
-            }
-
         }
     }
 }

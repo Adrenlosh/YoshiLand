@@ -34,7 +34,7 @@ namespace YoshiLand.GameObjects
         FastFall
     }
 
-    public class Yoshi : GameObject, IDamageable //TODO:死亡、受伤
+    public class Yoshi : GameObject, IDamageable //TODO:死亡、受伤、临时无敌
     {
         private const float MaxSpeed = 5f;
         private const float Acceleration = 0.5f;
@@ -46,9 +46,7 @@ namespace YoshiLand.GameObjects
         private const float MaxJumpHoldTime = 0.35f;
         private const float FloatActivationThreshold = 0.15f;
         private const float FloatForce = 0.2f;
-
         private const float PlummetStage1Duration = 0.5f;
-
         private const float TongueSpeed = 300f;
         private const float MaxTongueLength = 50f;
         private const float CrosshairRadius = 85f;
@@ -83,11 +81,14 @@ namespace YoshiLand.GameObjects
         private bool _isHoldingEgg = false;
         private bool _isPlummeting = false;
         private bool _isFloating = false;
+        private bool _isDie = false;
+        private bool _isHurt = false;
         private float _floatTime;
         private bool _isJumping = false;
         private bool _canJump = true;
         private bool _jumpInitiated = false;
         private float _jumpHoldTime = 0f;
+
         public override Point SpriteSize => _yoshiSprite.Size;
         public override Vector2 CenterBottomPosition
         {
@@ -156,14 +157,41 @@ namespace YoshiLand.GameObjects
 
         public void TakeDamage(int damage, GameObject source)
         {
+            if (!_isDie)
+            {
+                Velocity = new Vector2(6 * -_lastDirection, 0);
+                Health -= damage;
+                if (Health <= 0)
+                {
+                    Die();
+                }
+                else
+                {
+                    Hurt();
+                }
+            }
         }
 
         public void Hurt()
         {
+            //CanHandleInput = false;
+            _isHurt = true;
+            SFXSystem.Play("yoshi-hurt");
         }
 
         public void Die(bool clearHealth = false)
         {
+            if (clearHealth)
+            {
+                Velocity = new Vector2(2 * -_lastDirection, -10);
+                Health = 0;
+            }
+            OnDie?.Invoke();
+            OnDieComplete?.Invoke();
+            SFXSystem.Play("yoshi-died");
+            CanHandleInput = false;
+            _isDie = true;
+            GameMain.PlayerStatus.LifeLeft--;
         }
 
         public void HandleInput(GameTime gameTime)
