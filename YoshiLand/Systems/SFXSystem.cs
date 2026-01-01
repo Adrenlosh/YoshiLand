@@ -142,9 +142,10 @@ namespace YoshiLand.Systems
                 }
 
                 var buffer = _SFXCache[sfxName];
+
                 var playbackStream = new MemoryStream(buffer, writable: false);
-                var streamProvider = new StreamDataProvider(engine, AudioFormat.Dvd, playbackStream);
-                var sfxPlayer = new SoundPlayer(engine, AudioFormat.Dvd, streamProvider);
+                var streamProvider = new StreamDataProvider(engine, AudioFormat.DvdHq, playbackStream);
+                var sfxPlayer = new SoundPlayer(engine, AudioFormat.DvdHq, streamProvider);
 
                 playbackDevice.MasterMixer.AddComponent(sfxPlayer);
                 sfxPlayer.Volume = sfx.Volume;

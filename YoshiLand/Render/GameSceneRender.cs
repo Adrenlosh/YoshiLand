@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using MonoGame.Extended.BitmapFonts;
 using MonoGame.Extended.Tiled;
@@ -81,6 +82,7 @@ namespace YoshiLand.Rendering
             _tilemap = map;
             _tilemapRenderer = new TiledMapRenderer(_graphicsDevice, _tilemap);
             _camera.EnableWorldBounds(new Rectangle(0, 0, _tilemap.WidthInPixels, _tilemap.HeightInPixels));
+            _camera.IsZoomClampedToWorldBounds = false;
         }
 
         public void Update(GameTime gameTime, Vector2 cameraFocus, bool useFluentCamera = false, int cameraDirection = 1, Vector2 velocity = new Vector2())
@@ -99,6 +101,15 @@ namespace YoshiLand.Rendering
                 FadeStatus = FadeStatus.None;
                 OnFadeComplete?.Invoke();
                 _isFadeKeepTriggered = false;
+            }
+            GamePadState s = GamePad.GetState(PlayerIndex.One);
+            if(s.IsButtonDown(Buttons.LeftShoulder))
+            {
+                Camera.Zoom += 0.5f * elapsedTime;
+            }
+            else if(s.IsButtonDown(Buttons.RightShoulder))
+            {
+                Camera.Zoom -= 0.5f * elapsedTime;
             }
         }
 
@@ -168,8 +179,6 @@ namespace YoshiLand.Rendering
                     if (gameObject != GameObjectsSystem.Player)
                     {
                         gameObject.Draw(_spriteBatch);
-                        //_spriteBatch.DrawRectangle(gameObject.CollisionBox, Color.Red);
-                        //_spriteBatch.DrawString(_bitmapFont, $"{gameObject.Velocity}\n{gameObject.Position}", new Vector2(gameObject.Position.X, gameObject.Position.Y - 32), Color.Red);
                     }
                 }
                 if (FadeType == FadeType.Goal) DrawFade();

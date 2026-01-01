@@ -1,11 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Graphics;
 using MonoGame.Extended.Tiled;
 using System;
-using System.Diagnostics;
-using System.Runtime.InteropServices.Marshalling;
 using YoshiLand.Enums;
 using YoshiLand.Interfaces;
 using YoshiLand.Models;
@@ -34,7 +31,7 @@ namespace YoshiLand.GameObjects
         FastFall
     }
 
-    public class Yoshi : GameObject, IDamageable //TODO:死亡、受伤、临时无敌
+    public class Yoshi : GameObject, IDamageable //TODO:死亡
     {
         private const float MaxSpeed = 5f;
         private const float Acceleration = 0.5f;
@@ -44,8 +41,9 @@ namespace YoshiLand.GameObjects
         private const float ThrowingAnimationDuration = 0.5f;
         private const float MaxFloatTime = 0.8f;
         private const float MaxJumpHoldTime = 0.35f;
+        private const float HurtDuration = 0.5f;
+        private const float DieDuration = 2f;
         private const float FloatActivationThreshold = 0.15f;
-        private const float FloatForce = 0.2f;
         private const float PlummetStage1Duration = 0.5f;
         private const float TongueSpeed = 300f;
         private const float MaxTongueLength = 50f;
@@ -73,6 +71,9 @@ namespace YoshiLand.GameObjects
         private PlummetState _plummetStage = PlummetState.None;
 
         private int _lastDirection = 1;
+
+        private float _hurtTimer = 0;
+        private float _dieTimer = 0;
 
         private bool _isSquating = false;
         private bool _isLookingUp = false;
@@ -157,7 +158,7 @@ namespace YoshiLand.GameObjects
 
         public void TakeDamage(int damage, GameObject source)
         {
-            if (!_isDie)
+            if (!_isDie && !_isHurt)
             {
                 Velocity = new Vector2(6 * -_lastDirection, 0);
                 Health -= damage;
@@ -174,7 +175,7 @@ namespace YoshiLand.GameObjects
 
         public void Hurt()
         {
-            //CanHandleInput = false;
+            CanHandleInput = false;
             _isHurt = true;
             SFXSystem.Play("yoshi-hurt");
         }
@@ -183,22 +184,22 @@ namespace YoshiLand.GameObjects
         {
             if (clearHealth)
             {
-                Velocity = new Vector2(2 * -_lastDirection, -10);
                 Health = 0;
             }
-            OnDie?.Invoke();
-            OnDieComplete?.Invoke();
+            Velocity = new Vector2(2 * -_lastDirection, -10);
+            Physics.HasCollisions = false;
             SFXSystem.Play("yoshi-died");
+            GameMain.PlayerStatus.LifeLeft--;
             CanHandleInput = false;
             _isDie = true;
-            GameMain.PlayerStatus.LifeLeft--;
+            OnDie?.Invoke();
         }
 
         public void HandleInput(GameTime gameTime)
         {
             int currentDirection = 0;
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (GameControllerSystem.ActionPressed() &&  IsOnGround && CanThrowEgg) //!_isFloating &&
+            if (GameControllerSystem.ActionPressed() &&  IsOnGround && CanThrowEgg &&!_isFloating)
             {
                 if (GameMain.PlayerStatus.Egg > 0)
                 {
@@ -217,7 +218,7 @@ namespace YoshiLand.GameObjects
                     _isHoldingEgg = !_isHoldingEgg;
                 }
             }
-            if (GameControllerSystem.AttackPressed() && _tongueState == 0 && !_isSquating && !_isPlummeting)//!_isHoldingEgg && !_isSquating// && !_isFloating && !_hasThrownEgg && !_isTurning)
+            if (GameControllerSystem.AttackPressed() && _tongueState == 0 && !_isSquating && !_isPlummeting && !_isHoldingEgg && !_isSquating && !_isFloating && !_hasThrownEgg)// && !_isTurning)
             {
                 if (!_isMouthing)
                 {
@@ -236,7 +237,6 @@ namespace YoshiLand.GameObjects
                 }
                 else
                 {
-                    //吐出物体
                     if (_capturedObject != null)
                     {
                         if (_isLookingUp)
@@ -326,11 +326,11 @@ namespace YoshiLand.GameObjects
 
                 if (_floatTime <= MaxFloatTime && isJumpButtonHeld)
                 {
-                    if(_floatTime < 0.2) // d
+                    if(_floatTime < 0.2)
                     {
-
+                        //不
                     }
-                    else if(_floatTime >= 0.2f &&  _floatTime < 0.4f) // d
+                    else if(_floatTime >= 0.2f &&  _floatTime < 0.4f)
                     {
                         if(Velocity.Y > 2f)
                         {
@@ -338,7 +338,7 @@ namespace YoshiLand.GameObjects
                         }
                         SFXSystem.Stop("yoshi-float");
                     }
-                    else if(_floatTime <= MaxFloatTime && _floatTime >=0.4f) // u
+                    else if(_floatTime <= MaxFloatTime && _floatTime >=0.4f)
                     {
                         Physics.ApplyJump(2f, true);
                         SFXSystem.Stop("yoshi-float");
@@ -407,9 +407,17 @@ namespace YoshiLand.GameObjects
 
         private void UpdateAnimation()
         {
-            if (_isSquating)
+            if(_isDie)
             {
-                SetYoshiAnimation("squat", false);
+                SetYoshiAnimation("die", true);
+            }
+            else if(_isHurt)
+            {
+                SetYoshiAnimation("hurt");
+            }
+            else if (_isSquating)
+            {
+                SetYoshiAnimation("squat");
             }
             else if(_hasThrownEgg)
             {
@@ -424,11 +432,6 @@ namespace YoshiLand.GameObjects
             }
             else if (_isFloating && !_isHoldingEgg)
             {
-                // 浮动状态
-                //if (_floatTime >= 0.3f && _floatTime < 1.0f && !_isHoldingEgg)
-                //    SetYoshiAnimation("float");
-                //else if (!_isHoldingEgg)
-                //    SetYoshiAnimation("fall");
                 if (_floatTime < 0.2)
                 {
                     SetYoshiAnimation("fall");
@@ -512,6 +515,11 @@ namespace YoshiLand.GameObjects
         public override void Update(GameTime gameTime)
         {
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if(IsOutOfTilemapBottom(Position) && !_isDie)
+            {
+                Die(true);
+                Velocity = Vector2.Zero;
+            }
             if (CanHandleInput)
             {
                 HandleInput(gameTime);
@@ -529,16 +537,39 @@ namespace YoshiLand.GameObjects
                     _throwingAnimationTimer = 0f;
                 }
             }
+            if(_isDie)
+            {
+                _dieTimer += elapsedTime;
+                if(_dieTimer >= DieDuration)
+                {
+                    CanHandleInput = true;
+                    OnDieComplete?.Invoke();
+                }
+            }
+            if(_isHurt)
+            {
+                _hurtTimer += elapsedTime;
+                float blinkTime = 0.01f;
+                int blinkCount = (int)(_hurtTimer / blinkTime);
+                _yoshiSprite.Alpha = (blinkCount % 2 == 0) ? 1f : 0.5f;
+                if (_hurtTimer >= HurtDuration)
+                {
+                    _hurtTimer = 0;
+                    _isHurt = false;
+                    _yoshiSprite.Alpha = 1f;
+                    CanHandleInput = true;
+                }
+            }
             if (_isPlummeting && !IsOnGround)
             {
                 _plummetTimer += elapsedTime;
 
-                if (_plummetTimer > 0 && _plummetTimer < PlummetStage1Duration) //阶段1
+                if (_plummetTimer > 0 && _plummetTimer < PlummetStage1Duration)
                 {
                     _plummetStage = PlummetState.TurnAround;
                     Physics.HasGravity = false;
                 }
-                else //阶段2
+                else
                 {
                     _plummetStage = PlummetState.FastFall;
                     Physics.HasGravity = true;
@@ -674,8 +705,10 @@ namespace YoshiLand.GameObjects
                 _crosshairSprite.Draw(spriteBatch, _rotatingSpritePosition, 0, Vector2.One);
             }
             _yoshiSprite.Draw(spriteBatch, Position, 0, Vector2.One);
+            
             if (_tongueState != TongueState.None)
             {
+               
                 DrawTongue(spriteBatch);
             }
         }
@@ -712,14 +745,14 @@ namespace YoshiLand.GameObjects
             {
                 Rectangle baseSource = new Rectangle(0, 0, 1, _tongueSprite.TextureRegion.Height);
                 Vector2 baseScale = new Vector2(baseLength / 1, 1f);
-                spriteBatch.Draw(_tongueSprite.TextureRegion.Texture, tongueStart, baseSource, Color.White, rotation, Vector2.Zero, baseScale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(_tongueSprite.TextureRegion.Texture, tongueStart, baseSource, new Color(Color.White, _yoshiSprite.Alpha), rotation, Vector2.Zero, baseScale, SpriteEffects.None, 0f);
             }
 
             if (_tongueLength > 3)
             {
                 Rectangle tipSource = new Rectangle(1, 0, 6, _tongueSprite.TextureRegion.Height);
                 Vector2 tipPosition = tongueStart + _tongueDirection * _tongueLength;
-                spriteBatch.Draw(_tongueSprite.TextureRegion.Texture, tipPosition, tipSource, Color.White, rotation, Vector2.Zero, Vector2.One, SpriteEffects.None, 0f);
+                spriteBatch.Draw(_tongueSprite.TextureRegion.Texture, tipPosition, tipSource, new Color(Color.White, _yoshiSprite.Alpha), rotation, Vector2.Zero, Vector2.One, SpriteEffects.None, 0f);
             }
         }
         #endregion

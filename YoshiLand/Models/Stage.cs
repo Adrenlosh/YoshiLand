@@ -1,8 +1,6 @@
-﻿using Force.DeepCloner;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using MonoGame.Extended.Tiled;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using SoundFlow.Abstracts.Devices;
 using SoundFlow.Backends.MiniAudio;
+using SoundFlow.Codecs.FFMpeg;
 using SoundFlow.Components;
 using SoundFlow.Providers;
 using SoundFlow.Structs;
@@ -80,7 +81,7 @@ namespace YoshiLand.Systems
                 Stop();
                 string songPath = Path.Combine(_content.RootDirectory, "Audio", "Song", song.File);
                 stream = TitleContainer.OpenStream(songPath);
-                soundPlayer = new SoundPlayer(engine, AudioFormat.Dvd, new StreamDataProvider(engine, AudioFormat.Dvd, stream));
+                soundPlayer = new SoundPlayer(engine, AudioFormat.DvdHq, new StreamDataProvider(engine, AudioFormat.DvdHq, stream));
                 playbackDevice.MasterMixer.AddComponent(soundPlayer);
                 soundPlayer.Volume = song.Volume;
                 soundPlayer.IsLooping = song.IsLooping;

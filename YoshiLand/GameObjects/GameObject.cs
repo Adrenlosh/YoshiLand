@@ -92,40 +92,40 @@ namespace YoshiLand.GameObjects
         #endregion
 
         #region Boundary
-
-        public virtual bool IsOutOfTilemap(Vector2 position)
-        {
-            Rectangle worldRect = new Rectangle(0, 0, _tilemap.WidthInPixels, _tilemap.HeightInPixels);
-            return !worldRect.Contains(position);
-        }
-
-        public virtual bool IsOutOfTilemapBottom(Vector2 position)
-        {
-            return position.Y > _tilemap.HeightInPixels;
-        }
-
-        public virtual bool IsOutOfTilemapBottom() => IsOutOfTilemapBottom(Position);
-
-        public virtual bool IsOutOfTilemapSidePosition(Vector2 position)
+        public bool IsOutOfTilemapSide(Vector2 position)
         {
             return position.X < 0 || position.X > _tilemap.WidthInPixels;
         }
 
-        public virtual bool IsOutOfTilemapSidePosition() => IsOutOfTilemapSidePosition(Position);
-
-        public virtual bool IsOutOfTilemapSideBox(Rectangle rect)
+        public bool IsOutOfTilemapSide(Rectangle rect)
         {
             return rect.Left < 0 || rect.Right > _tilemap.WidthInPixels;
         }
 
-        public virtual bool IsOutOfTilemapSideBox() => IsOutOfTilemapSideBox(CollisionBox);
+        public bool IsOutOfTilemapSide()
+        {
+            return IsOutOfTilemapSide(CollisionBox);
+        }
+
+        public bool IsOutOfTilemapBottom(Vector2 position)
+        {
+            return position.Y > _tilemap.HeightInPixels;
+        }
+
+        public bool IsOutOfTilemapBottom(Rectangle rect)
+        {
+            return rect.Bottom > _tilemap.HeightInPixels;
+        }
+
+        public bool IsOutOfTilemapBottom()
+        {
+            return IsOutOfTilemapBottom(CollisionBox);
+        }
 
         public bool IsOutOfScreenBounds() => !ScreenBounds.Intersects(GetCollisionBox(Position));
-
         #endregion
 
         #region Slope
-
         public virtual bool IsOnSlope(TileCollisionResult result, out int slopeWidth, out int slopeHeight,
                                     out int topY, out int bottomY)
         {

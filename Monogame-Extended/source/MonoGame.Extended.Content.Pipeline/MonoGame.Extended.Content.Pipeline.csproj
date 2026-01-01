@@ -11,15 +11,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="5.2.0" />
+    <PackageReference Include="Autofac" Version="9.0.0" />
 
-    <PackageReference Include="MonoGame.Framework.Content.Pipeline"
-                      Version="3.8.4"
-                      PrivateAssets="All" />
+    <PackageReference Include="MonoGame.Framework.Content.Pipeline" Version="3.8.4.1" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MonoGame.Extended\MonoGame.Extended.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
   </ItemGroup>
 
 </Project>

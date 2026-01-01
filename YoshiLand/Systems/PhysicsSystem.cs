@@ -11,8 +11,8 @@ namespace YoshiLand.Systems
 {
     public class PhysicsSystem
     {
-        private GameObject _targetObject;
-        private TiledMap _tilemap;
+        private readonly GameObject _targetObject;
+        private readonly TiledMap _tilemap;
 
         public float Gravity { get; set; } = 0.5f;
         public float MaxFallSpeed { get; set; } = 12f;
@@ -21,7 +21,7 @@ namespace YoshiLand.Systems
         public float MaxHorizontalSpeed { get; set; } = 8f;
         public float Acceleration { get; set; } = 0.5f;
         public float Deceleration { get; set; } = 0.5f;
-
+        public bool HasCollisions { get; set; }  = true;
         public bool HasGravity
         {
             get => field;
@@ -80,7 +80,7 @@ namespace YoshiLand.Systems
                 newVelocityY = Math.Min(newVelocityY, MaxFallSpeed);
                 _targetObject.Velocity = new Vector2(_targetObject.Velocity.X, newVelocityY);
             }
-            else if (_targetObject.Velocity.Y > 0)
+            else if (_targetObject.Velocity.Y > 0 && HasCollisions)
             {
                 _targetObject.Velocity = new Vector2(_targetObject.Velocity.X, 0);
             }
@@ -88,6 +88,7 @@ namespace YoshiLand.Systems
 
         private void ApplyCollisions(float deltaTime)
         {
+
             Vector2 newPosition = _targetObject.Position;
             Vector2 velocity = _targetObject.Velocity * deltaTime * 60f;
             if (_targetObject.Velocity.X != 0) //水平碰撞检测
@@ -114,7 +115,7 @@ namespace YoshiLand.Systems
                 Vector2 verticalMove = new Vector2(0, _targetObject.Velocity.Y);
                 Vector2 testPosition = newPosition + verticalMove;
 
-                if (testPosition.Y < 0)
+                if (testPosition.Y < 0 && HasCollisions)
                 {
                     newPosition.Y = 0;
                     _targetObject.Velocity = new Vector2(_targetObject.Velocity.X, 0);
@@ -122,7 +123,7 @@ namespace YoshiLand.Systems
                 else
                 {
                     Rectangle testRect = _targetObject.GetCollisionBox(testPosition);
-                    if (_targetObject.IsCollidingWithTile(testRect, out TileCollisionResult result))
+                    if (_targetObject.IsCollidingWithTile(testRect, out TileCollisionResult result) && HasCollisions)
                     {
                         if (result.TileType.HasFlag(TileType.Penetrable))
                         {
@@ -152,7 +153,7 @@ namespace YoshiLand.Systems
                         }
                         else
                         {
-                            if (_targetObject.Velocity.Y > 0.6)
+                            if (_targetObject.Velocity.Y > 0.6 && HasCollisions)
                             {
                                 if (result.TileType.HasFlag(TileType.Platform))
                                 {
@@ -178,7 +179,7 @@ namespace YoshiLand.Systems
                                     _targetObject.IsOnGround = true;
                                 }
                             }
-                            else if (_targetObject.Velocity.Y < 0)
+                            else if (_targetObject.Velocity.Y < 0 && HasCollisions)
                             {
                                 if (result.TileType.HasFlag(TileType.Platform))
                                 {
@@ -204,7 +205,7 @@ namespace YoshiLand.Systems
             else
             {
                 Rectangle collisionBox = _targetObject.GetCollisionBox(newPosition);
-                if (_targetObject.IsCollidingWithTile(new Rectangle(collisionBox.X, collisionBox.Y + collisionBox.Height, collisionBox.Width, 3), out TileCollisionResult groundResult))
+                if (_targetObject.IsCollidingWithTile(new Rectangle(collisionBox.X, collisionBox.Y + collisionBox.Height, collisionBox.Width, 3), out TileCollisionResult groundResult) && HasCollisions)
                 {
                     if (!groundResult.TileType.HasFlag(TileType.Penetrable))
                     {

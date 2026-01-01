@@ -48,6 +48,9 @@
         <Animation name="die" looping="false" frameDuration="0.15">
             <Frames>65</Frames>
         </Animation>
+		<Animation name="hurt" looping="false" frameDuration="0.15">
+			<Frames>65</Frames>
+		</Animation>
         <Animation name="tongue-out" looping="false" frameDuration="0.15">
             <Frames>33</Frames>
         </Animation>

@@ -9,6 +9,7 @@ using MonoGame.Extended.Screens.Transitions;
 using MonoGame.Extended.ViewportAdapters;
 using SoundFlow.Abstracts.Devices;
 using SoundFlow.Backends.MiniAudio;
+using SoundFlow.Codecs.FFMpeg;
 using SoundFlow.Structs;
 using System;
 using System.Linq;
@@ -16,7 +17,7 @@ using YoshiLand.Screens;
 using YoshiLand.Status;
 using YoshiLand.Systems;
 
-namespace YoshiLand //TODO:屏幕逻辑更新
+namespace YoshiLand
 {
     public class GameMain : Game
     {
@@ -89,12 +90,13 @@ namespace YoshiLand //TODO:屏幕逻辑更新
             SFXSystem.Initialize(Content, engine, playbackDevice);
             SongSystem.Initialize(Content, engine, playbackDevice);
 
+
 #if !DEBUG
-            _screenManager.ShowScreen(new LogoScreen(this));
+            _screenManager.ShowScreen(new LogoScreen(this), new FadeTransition(GraphicsDevice, Color.Black, 1f));
 #else
             //LoadScreen(new TitleScreen(this));
             //LoadScreen(new GamingScreen(this, StageSystem.GetStageByName("grassland1")));
-            _screenManager.ShowScreen(new TitleScreen(this));
+            _screenManager.ShowScreen(new LogoScreen(this), new FadeTransition(GraphicsDevice, Color.Black, 1f));
 #endif
             base.LoadContent();
         }
@@ -102,8 +104,12 @@ namespace YoshiLand //TODO:屏幕逻辑更新
         private void InitializeAudio(out MiniAudioEngine engine, out AudioPlaybackDevice device)
         {
             engine = new MiniAudioEngine();
+            
+            engine.RegisterCodecFactory(new FFmpegCodecFactory());
+            engine.RegisterCodecFactory(new MiniAudioCodecFactory());
+            engine.SetCodecPriority("SoundFlow.MiniAudio.Default", int.MaxValue);
             DeviceInfo defaultDevice = engine.PlaybackDevices.FirstOrDefault(x => x.IsDefault);
-            device = engine.InitializePlaybackDevice(defaultDevice, AudioFormat.Dvd);
+            device = engine.InitializePlaybackDevice(defaultDevice, AudioFormat.DvdHq);
             device.Start();
         }
 
@@ -113,18 +119,6 @@ namespace YoshiLand //TODO:屏幕逻辑更新
             SFXSystem.Dispose();
             base.UnloadContent();
         }
-
-        //public void LoadScreen(GameScreen screen, Transition transition = null)
-        //{
-        //    if (transition != null)
-        //    {
-        //        _screenManager.LoadScreen(screen, transition);
-        //    }
-        //    else
-        //    {
-        //        _screenManager.LoadScreen(screen);
-        //    }
-        //}
 
         public float GetUIScale(ViewportAdapter viewportAdapter)
         {

@@ -34,11 +34,11 @@ namespace YoshiLand.Screens
         public override void Draw(GameTime gameTime)
         {
             Matrix matrix = _viewportAdapter.GetScaleMatrix();
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Color.White);
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: matrix);
             if (_showLogo)
             {
-            _spriteBatch.Draw(_adrenloshTexture, new Vector2(_viewportAdapter.Center.X - _adrenloshTexture.Width / 2, _viewportAdapter.Center.Y - _adrenloshTexture.Height / 2), Color.White);
+                _spriteBatch.Draw(_adrenloshTexture, new Vector2(_viewportAdapter.Center.X - _adrenloshTexture.Width / 2, _viewportAdapter.Center.Y - _adrenloshTexture.Height / 2), Color.White);
             }
             _spriteBatch.End();
         }

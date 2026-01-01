@@ -213,17 +213,17 @@
 #begin Audio/SFX/yoshi.wav
 /copy:Audio/SFX/yoshi.wav
 
-#begin Audio/Song/goal.mp3
-/copy:Audio/Song/goal.mp3
+#begin Audio/Song/goal.ogg
+/copy:Audio/Song/goal.ogg
 
-#begin Audio/Song/song1.mp3
-/copy:Audio/Song/song1.mp3
+#begin Audio/Song/song1.ogg
+/copy:Audio/Song/song1.ogg
 
-#begin Audio/Song/song2.mp3
-/copy:Audio/Song/song2.mp3
+#begin Audio/Song/song2.ogg
+/copy:Audio/Song/song2.ogg
 
-#begin Audio/Song/title.mp3
-/copy:Audio/Song/title.mp3
+#begin Audio/Song/title.ogg
+/copy:Audio/Song/title.ogg
 
 #begin Effects/circleMask.fx
 /importer:EffectImporter
