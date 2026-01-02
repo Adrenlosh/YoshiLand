@@ -86,7 +86,7 @@ namespace YoshiLand
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             InitializeUi();
             InitializeAudio(out MiniAudioEngine engine, out AudioPlaybackDevice playbackDevice);
-            StageSystem.Initialize(Content);
+            StagesSystem.Initialize(Content);
             SFXSystem.Initialize(Content, engine, playbackDevice);
             SongSystem.Initialize(Content, engine, playbackDevice);
 

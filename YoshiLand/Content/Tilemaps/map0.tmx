@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" class="GameMap" orientation="orthogonal" renderorder="right-down" width="320" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="3228">
+<map version="1.10" tiledversion="1.11.2" class="GameMap" orientation="orthogonal" renderorder="right-down" width="320" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="3230">
  <properties>
   <property name="Song" value="song1"/>
  </properties>
@@ -43,6 +43,20 @@
    <point/>
   </object>
   <object id="3227" name="Enemy" x="544" y="176">
+   <point/>
+  </object>
+  <object id="3228" name="Door" type="Portal" x="208" y="304">
+   <properties>
+    <property name="TargetMap" value="map1"/>
+    <property name="TargetPoint" value="Entry"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="3229" name="Point" type="SpawnPoint" x="304" y="304">
+   <properties>
+    <property name="Name" value="Point0"/>
+    <property name="TargetMap" value="map1"/>
+   </properties>
    <point/>
   </object>
  </objectgroup>

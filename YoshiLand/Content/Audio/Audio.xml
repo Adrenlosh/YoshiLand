@@ -3,7 +3,7 @@
 	<Songs>
 		<Song name="title" file="title.ogg" repeat="true" repeatStartSecond="0"/>
 		<Song name="goal" file="goal.ogg" repeat="false"/>
-		<Song name="song1" file="song1.ogg" repeat="true"/>
+		<Song name="song1" file="song1.ogg" repeat="true" volume="0.5"/>
 		<Song name="song2" file="song2.ogg" repeat="true"/>
 	</Songs>
 	<SoundEffects>

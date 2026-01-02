@@ -1,0 +1,9 @@
+<World name="grassland" displayName="The Peaceful Grassland">
+    <Stages>
+        <Stage file="1" thumbnailPosition="10, 10"/>
+        <Stage file="2" thumbnailPosition="20, 20"/>
+        <Stage file="3" thumbnailPosition="30, 30"/>
+        <Stage file="4" thumbnailPosition="40, 40"/>
+        <Stage file="5" thumbnailPosition="50, 50"/>
+    </Stages>
+</World>

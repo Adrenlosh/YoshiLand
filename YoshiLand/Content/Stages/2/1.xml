@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Stage name="orangesea1" displayName="Orange Sea 1" entryMap="map0">
+	<Tilemaps>
+		<Tilemap file="map0"/>
+		<Tilemap file="map1"/>
+	</Tilemaps>
+</Stage>

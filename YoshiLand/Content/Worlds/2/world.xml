@@ -1,0 +1,6 @@
+<World name="orangesea" displayName="The Orange Sea">
+    <Stages>
+        <Stage file="1"/>
+        <Stage file="2"/>
+    </Stages>
+</World>

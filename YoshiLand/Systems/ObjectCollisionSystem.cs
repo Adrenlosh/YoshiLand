@@ -138,7 +138,7 @@ namespace YoshiLand.Systems
                 else if(collidable is Door door)
                 {
                     var collisionResult = GameObjectsSystem.CheckObjectCollision(door);
-                    if (GameControllerSystem.MoveUp() && collisionResult.CollidedObject != null && collisionResult.CollidedObject == player)
+                    if (GameControllerSystem.InteractionPressed() && collisionResult.CollidedObject != null && collisionResult.CollidedObject == player)
                     {
                         player.OnCollision(door, collisionResult);
                         door.OnCollision(player, collisionResult);

@@ -141,7 +141,7 @@ namespace YoshiLand.Screens
         {
             if (GameControllerSystem.BackPressed())
             {
-                Game.Screens.ReplaceScreen(new MapScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
+                Game.Screens.ReplaceScreen(new NewMapScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
             }
         }
 
@@ -233,7 +233,7 @@ namespace YoshiLand.Screens
             }
             SFXSystem.Play("exit");
             GameObjectsSystem.Player.CanHandleInput = true;
-            Game.Screens.ReplaceScreen(new MapScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
+            Game.Screens.ReplaceScreen(new NewMapScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
         }
 
         private void OnFadeKeep()

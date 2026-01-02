@@ -308,29 +308,26 @@
 /processorParam:TextureFormat=Color
 /build:Images/logo.png
 
-#begin Images/map.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Images/map.png
+#begin Stages/1/1.xml
+/copy:Stages/1/1.xml
 
-#begin Stages/stage0.xml
-/copy:Stages/stage0.xml
+#begin Stages/1/2.xml
+/copy:Stages/1/2.xml
 
-#begin Stages/stage1.xml
-/copy:Stages/stage1.xml
+#begin Stages/1/3.xml
+/copy:Stages/1/3.xml
 
-#begin Stages/stage2.xml
-/copy:Stages/stage2.xml
+#begin Stages/1/4.xml
+/copy:Stages/1/4.xml
 
-#begin Stages/Stages.txt
-/copy:Stages/Stages.txt
+#begin Stages/1/5.xml
+/copy:Stages/1/5.xml
+
+#begin Stages/2/1.xml
+/copy:Stages/2/1.xml
+
+#begin Stages/2/2.xml
+/copy:Stages/2/2.xml
 
 #begin Tilemaps/background1.png
 /importer:TextureImporter
@@ -416,4 +413,37 @@
 /importer:TiledMapTilesetImporter
 /processor:TiledMapTilesetProcessor
 /build:Tilemaps/tileset.tsx
+
+#begin Worlds/1/thumbnail.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Worlds/1/thumbnail.png
+
+#begin Worlds/1/world.xml
+/copy:Worlds/1/world.xml
+
+#begin Worlds/2/thumbnail.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Worlds/2/thumbnail.png
+
+#begin Worlds/2/world.xml
+/copy:Worlds/2/world.xml
+
+#begin Worlds/Worlds.txt
+/copy:Worlds/Worlds.txt
 

@@ -11,29 +11,21 @@ namespace YoshiLand.Models
 {
     public class Stage
     {
-        private ICollection _tilemapsName;
-        private ContentManager _contentManager;
+        private readonly ICollection _tilemapsName;
+        private readonly ContentManager _contentManager;
 
         public string Name { get; set; }
-
         public string DisplayName { get; set; } = "Map";
-
-        public string Description { get; set; } = "Yoshi Land Map";
-
         public Dictionary<string, TiledMap> Tilemaps { get; set; } = new Dictionary<string, TiledMap>();
-
         public Dictionary<string, SpawnPoint[]> SpawnPoints { get; set; } = new Dictionary<string, SpawnPoint[]>(); // Key: MapName, Value: Array of SpawnPoints
-
         public string EntryMap { get; set; }
-
         public string CurrentMap { get; set; }
 
-        public Stage(string name, string displayName, string description, string entryMap, ICollection tilemapsName, ContentManager contentManager)
+        public Stage(string name, string displayName, string entryMap, ICollection tilemapsName, ContentManager contentManager)
         {
             _contentManager = contentManager;
             Name = name;
             DisplayName = displayName;
-            Description = description;
             EntryMap = entryMap;
             _tilemapsName = tilemapsName;
         }

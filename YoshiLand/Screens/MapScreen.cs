@@ -109,7 +109,7 @@ namespace YoshiLand.Screens
             {
                 if (_stage == null || _stage.Name != currentStageName)
                 {
-                    _stage = StageSystem.GetStageByName(currentStageName);
+                   // _stage = StagesSystem.GetStageByName(currentStageName);
                 }
             }
             else
