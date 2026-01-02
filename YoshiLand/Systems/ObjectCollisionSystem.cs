@@ -6,7 +6,7 @@ using System;
 
 namespace YoshiLand.Systems
 {
-    public class InteractionSystem
+    public class ObjectCollisionSystem
     {
         private bool _isGoal = false;
         public event Action<string> OnDialogue;

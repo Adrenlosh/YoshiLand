@@ -15,7 +15,6 @@ namespace YoshiLand.Screens
         private bool _showLogo = false;
         private Texture2D _adrenloshTexture;
         private SpriteBatch _spriteBatch;
-        private BoxingViewportAdapter _viewportAdapter;
 
         public new GameMain Game => (GameMain)base.Game;
 
@@ -25,7 +24,6 @@ namespace YoshiLand.Screens
 
         public override void LoadContent()
         {
-            _viewportAdapter = new BoxingViewportAdapter(Game.Window, Game.GraphicsDevice, GlobalConfig.VirtualResolution_Width, GlobalConfig.VirtualResolution_Height);
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _adrenloshTexture = Content.Load<Texture2D>("Images/Adrenlosh");
             base.LoadContent();
@@ -33,12 +31,11 @@ namespace YoshiLand.Screens
 
         public override void Draw(GameTime gameTime)
         {
-            Matrix matrix = _viewportAdapter.GetScaleMatrix();
             GraphicsDevice.Clear(Color.White);
-            _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: matrix);
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: GameMain.ViewportAdapter.GetScaleMatrix());
             if (_showLogo)
             {
-                _spriteBatch.Draw(_adrenloshTexture, new Vector2(_viewportAdapter.Center.X - _adrenloshTexture.Width / 2, _viewportAdapter.Center.Y - _adrenloshTexture.Height / 2), Color.White);
+                _spriteBatch.Draw(_adrenloshTexture, new Vector2(GameMain.ViewportAdapter.Center.X - _adrenloshTexture.Width / 2, GameMain.ViewportAdapter.Center.Y - _adrenloshTexture.Height / 2), Color.White);
             }
             _spriteBatch.End();
         }

@@ -63,16 +63,28 @@ public static class GameControllerSystem
                GetStatePad().IsKeyDown(Buttons.A);
     }
 
-    public static bool ActionPressed()
+    public static bool ThrowPressed()
     {
         return GetStateKeyboard().WasKeyPressed(Keys.J) ||
                GetStatePad().WasKeyPressed(Buttons.X);
     }
 
-    public static bool ActionHeld()
+    public static bool ThrowHeld()
     {
         return GetStateKeyboard().IsKeyDown(Keys.J) ||
                GetStatePad().IsKeyDown(Buttons.X);
+    }
+
+    public static bool InteractionPressed()
+    {
+        return GetStateKeyboard().WasKeyPressed(Keys.E) ||
+               GetStatePad().WasKeyPressed(Buttons.LeftTrigger);
+    }
+
+    public static bool InteractionHeld()
+    {
+        return GetStateKeyboard().IsKeyDown(Keys.E) ||
+               GetStatePad().IsKeyDown(Buttons.LeftTrigger);
     }
 
     public static bool AttackPressed()
@@ -87,6 +99,18 @@ public static class GameControllerSystem
             GetStatePad().IsKeyDown(Buttons.B);
     }
 
+    public static bool AccelerateHeld()
+    {
+        return GetStateKeyboard().IsKeyDown(Keys.P) ||
+               GetStatePad().IsKeyDown(Buttons.RightTrigger);
+    }
+
+    public static bool AcceleratePressed()
+    {
+        return GetStateKeyboard().WasKeyPressed(Keys.P) ||
+               GetStatePad().WasKeyPressed(Buttons.RightTrigger);
+    }
+
     public static bool StartPressed()
     {
         return GetStateKeyboard().WasKeyPressed(Keys.B) ||
@@ -97,10 +121,5 @@ public static class GameControllerSystem
     {
         return GetStateKeyboard().WasKeyPressed(Keys.Escape) ||
             GetStatePad().WasKeyPressed(Buttons.Back);
-    }
-
-    internal static bool JumpHold()
-    {
-        throw new NotImplementedException();
     }
 }

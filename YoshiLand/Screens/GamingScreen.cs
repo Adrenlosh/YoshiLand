@@ -22,7 +22,7 @@ namespace YoshiLand.Screens
         private GamingScreenUI _ui;        
         private TiledMap _tilemap;
         private TimeSpan _remainingTime = TimeSpan.FromSeconds(350);
-        private InteractionSystem _interactionSystem;
+        private ObjectCollisionSystem _objectCollisionSystem;
         private Stage _stage;
         private Vector2 _cameraLockPosition;
         private SpriteBatch _spriteBatch;
@@ -54,11 +54,11 @@ namespace YoshiLand.Screens
             _gameSceneRenderer.OnFadeComplete += OnFadeComplete;
             _gameSceneRenderer.OnFadeKeep += OnFadeKeep;
 
-            _interactionSystem = new InteractionSystem();
-            _interactionSystem.OnDialogue += OnDialogue;
-            _interactionSystem.OnReachGoal += OnGoal;
-            _interactionSystem.OnCollectCoin += OnCollectACoin;
-            _interactionSystem.OnSwitchMap += OnSwitchMap;
+            _objectCollisionSystem = new ObjectCollisionSystem();
+            _objectCollisionSystem.OnDialogue += OnDialogue;
+            _objectCollisionSystem.OnReachGoal += OnGoal;
+            _objectCollisionSystem.OnCollectCoin += OnCollectACoin;
+            _objectCollisionSystem.OnSwitchMap += OnSwitchMap;
 
             InitializeScreen();
             InitializeUI();
@@ -118,7 +118,7 @@ namespace YoshiLand.Screens
                 GameObjectsSystem.InactivateObejcts(screenBounds);
                 GameObjectsSystem.ActivateObjects(screenBounds);
                 GameObjectsSystem.Update(gameTime);
-                _interactionSystem.Update(gameTime);
+                _objectCollisionSystem.Update(gameTime);
 
                 if (player != null)
                 {
@@ -129,7 +129,7 @@ namespace YoshiLand.Screens
             if (player != null)
             {
                 bool useFadeCamera = isTransitioning || _gameSceneRenderer.FadeStatus == FadeStatus.None;
-                _gameSceneRenderer.Update(gameTime, player.Position, true,
+                _gameSceneRenderer.Update(gameTime, player.Position, false,
                     player.FaceDirection, player.Velocity);
             }
 

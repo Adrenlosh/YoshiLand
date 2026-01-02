@@ -21,7 +21,7 @@ namespace YoshiLand.Screens
         private MaskTransition _maskTransition;
 
         private GameSceneRender _gameSceneRenderer;
-        private InteractionSystem _interactionSystem;
+        private ObjectCollisionSystem _objectCollisionSystem;
         private Texture2D _logo;
 
         public new GameMain Game => (GameMain)base.Game;
@@ -58,7 +58,7 @@ namespace YoshiLand.Screens
             _gameSceneRenderer = new GameSceneRender(GraphicsDevice, Game.Window, Content);
             _gameSceneRenderer.LoadContent();
             _gameSceneRenderer.LoadMap(_stage.StartStage());
-            _interactionSystem = new InteractionSystem();
+            _objectCollisionSystem = new ObjectCollisionSystem();
             GameObjectsSystem.Player.CanHandleInput = true;
             SongSystem.Play("title");
             InitializeUI();
@@ -71,7 +71,7 @@ namespace YoshiLand.Screens
             GameObjectsSystem.ActivateObjects(_gameSceneRenderer.GetScreenBounds());
             GameObjectsSystem.Update(gameTime);
             _maskTransition.Update(gameTime);
-            _interactionSystem.Update(gameTime);
+            _objectCollisionSystem.Update(gameTime);
             _gameSceneRenderer.Update(gameTime, GameObjectsSystem.Player.Position, true, GameObjectsSystem.Player.FaceDirection, GameObjectsSystem.Player.Velocity);
         }
 

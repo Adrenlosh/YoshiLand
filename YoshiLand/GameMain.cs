@@ -44,7 +44,7 @@ namespace YoshiLand
             _screenManager = new ScreenManager();
             Components.Add(_screenManager);
             IsMouseVisible = true;
-            IsFixedTimeStep = true;
+            IsFixedTimeStep = false;
             Content.RootDirectory = "Content";
             Window.AllowUserResizing = true;
             Window.Title = Language.Strings.GameName;
@@ -95,8 +95,9 @@ namespace YoshiLand
             _screenManager.ShowScreen(new LogoScreen(this), new FadeTransition(GraphicsDevice, Color.Black, 1f));
 #else
             //LoadScreen(new TitleScreen(this));
-            //LoadScreen(new GamingScreen(this, StageSystem.GetStageByName("grassland1")));
-            _screenManager.ShowScreen(new LogoScreen(this), new FadeTransition(GraphicsDevice, Color.Black, 1f));
+            //_screenManager.ShowScreen(new GamingScreen(this, StageSystem.GetStageByName("grassland1")));
+            //_screenManager.ShowScreen(new TitleScreen(this), new FadeTransition(GraphicsDevice, Color.Black, 0.2f));
+            _screenManager.ShowScreen(new NewMapScreen(this));
 #endif
             base.LoadContent();
         }

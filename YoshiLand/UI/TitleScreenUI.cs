@@ -18,11 +18,6 @@ namespace YoshiLand.UI
                 OnPressed = (b) => StartButtonClicked?.Invoke(this, EventArgs.Empty)
             };
             AddChild(button);
-
-            //Paragraph title = new Paragraph(MLEM.Ui.Anchor.Center, Size.X, Language.Strings.GameName, false);
-            //title.Alignment = new MLEM.Ui.Style.StyleProp<MLEM.Formatting.TextAlignment>(MLEM.Formatting.TextAlignment.Center);
-            //title.TextColor = Color.Orange;
-            //AddChild(title);
         }
     }
 }

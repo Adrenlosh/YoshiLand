@@ -31,13 +31,15 @@ namespace YoshiLand.GameObjects
         FastFall
     }
 
-    public class Yoshi : GameObject, IDamageable //TODO:死亡
+    public class Yoshi : GameObject, IDamageable
     {
-        private const float MaxSpeed = 5f;
-        private const float Acceleration = 0.5f;
-        private const float BaseJumpForce = 6f;
-        private const float Gravity = 0.5f;
-        private const float PlummetGravity = 1f;
+        private const float MaxSpeed = 2.5f;
+        private const float WalkMaxSpeed = 1f;
+        private const float Acceleration = 35f;
+        private const float BaseJumpForce = 4.15f;
+        private const float Gravity = 30f;
+        private const float PlummetGravity = 50f;
+
         private const float ThrowingAnimationDuration = 0.5f;
         private const float MaxFloatTime = 0.8f;
         private const float MaxJumpHoldTime = 0.35f;
@@ -45,6 +47,7 @@ namespace YoshiLand.GameObjects
         private const float DieDuration = 2f;
         private const float FloatActivationThreshold = 0.15f;
         private const float PlummetStage1Duration = 0.5f;
+
         private const float TongueSpeed = 300f;
         private const float MaxTongueLength = 50f;
         private const float CrosshairRadius = 85f;
@@ -186,7 +189,7 @@ namespace YoshiLand.GameObjects
             {
                 Health = 0;
             }
-            Velocity = new Vector2(2 * -_lastDirection, -10);
+            Velocity = new Vector2(2 * -_lastDirection, -5);
             Physics.HasCollisions = false;
             SFXSystem.Play("yoshi-died");
             GameMain.PlayerStatus.LifeLeft--;
@@ -199,7 +202,7 @@ namespace YoshiLand.GameObjects
         {
             int currentDirection = 0;
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (GameControllerSystem.ActionPressed() &&  IsOnGround && CanThrowEgg &&!_isFloating)
+            if (GameControllerSystem.ThrowPressed() &&  IsOnGround && CanThrowEgg &&!_isFloating)
             {
                 if (GameMain.PlayerStatus.Egg > 0)
                 {
@@ -261,7 +264,7 @@ namespace YoshiLand.GameObjects
             {
                 _isPlummeting = true;
             }
-            if (GameControllerSystem.MoveDown() && IsOnGround)
+            if (GameControllerSystem.MoveDown() && IsOnGround && !_isSpitting && _tongueState == TongueState.None)
             {
                 _isSquating = true;
             }
@@ -276,16 +279,17 @@ namespace YoshiLand.GameObjects
             else
             {
                 _isLookingUp = false;
-            }            
+            }
+            bool isAttackButtonHeld = GameControllerSystem.AccelerateHeld();
             if (GameControllerSystem.MoveLeft() && !_isSquating && !_isLookingUp)
             {
-                Physics.ApplyAcceleration(-Acceleration, MaxSpeed);
+                Physics.ApplyAcceleration(-Acceleration * elapsedTime, isAttackButtonHeld ? MaxSpeed : WalkMaxSpeed);
                 currentDirection = -1;
                 _hasThrownEgg = false;
             }
             if (GameControllerSystem.MoveRight() && !_isSquating && !_isLookingUp)
             {
-                Physics.ApplyAcceleration(Acceleration, MaxSpeed);
+                Physics.ApplyAcceleration(Acceleration * elapsedTime, isAttackButtonHeld ? MaxSpeed : WalkMaxSpeed);
                 currentDirection = 1;
                 _hasThrownEgg = false;
             }
@@ -326,21 +330,17 @@ namespace YoshiLand.GameObjects
 
                 if (_floatTime <= MaxFloatTime && isJumpButtonHeld)
                 {
-                    if(_floatTime < 0.2)
+                    if(_floatTime >= 0.2f &&  _floatTime < 0.4f)
                     {
-                        //不
-                    }
-                    else if(_floatTime >= 0.2f &&  _floatTime < 0.4f)
-                    {
-                        if(Velocity.Y > 2f)
+                        if(Velocity.Y > 7f * elapsedTime)
                         {
-                            Physics.ApplyJump(0.3f, true);
+                            Physics.ApplyJump(70f * elapsedTime, true);
                         }
                         SFXSystem.Stop("yoshi-float");
                     }
                     else if(_floatTime <= MaxFloatTime && _floatTime >=0.4f)
                     {
-                        Physics.ApplyJump(2f, true);
+                        Physics.ApplyJump(75f * elapsedTime, true);
                         SFXSystem.Stop("yoshi-float");
                     }
                 }
@@ -407,11 +407,11 @@ namespace YoshiLand.GameObjects
 
         private void UpdateAnimation()
         {
-            if(_isDie)
+            if (_isDie)
             {
                 SetYoshiAnimation("die", true);
             }
-            else if(_isHurt)
+            else if (_isHurt)
             {
                 SetYoshiAnimation("hurt");
             }
@@ -419,7 +419,7 @@ namespace YoshiLand.GameObjects
             {
                 SetYoshiAnimation("squat");
             }
-            else if(_hasThrownEgg)
+            else if (_hasThrownEgg)
             {
                 SetYoshiAnimation("throw");
             }
@@ -441,6 +441,13 @@ namespace YoshiLand.GameObjects
                     SetYoshiAnimation("float");
                 }
             }
+            else if (_isLookingUp && IsOnGround)
+            {
+                if (_tongueState != TongueState.None)
+                    SetYoshiAnimation("tongue-out-up");
+                else 
+                    SetYoshiAnimation("look-up");
+            }
             else
             {
                 if (_isHoldingEgg)
@@ -452,9 +459,10 @@ namespace YoshiLand.GameObjects
                         SetYoshiAnimation("hold-egg-walk");
                     return;
                 }
+
                 if (Velocity.X != 0)
                 {
-                    if (Math.Abs(Velocity.X) < 2)
+                    if (Math.Abs(Velocity.X) < WalkMaxSpeed) //TODO:用常量替代数值
                         SetYoshiAnimation(_tongueState != TongueState.None ? "tongue-out-walk" : "walk");
                     else
                         SetYoshiAnimation(_tongueState != TongueState.None ? "tongue-out-run" : "run");
@@ -463,6 +471,7 @@ namespace YoshiLand.GameObjects
                 {
                     SetYoshiAnimation(_tongueState != TongueState.None ? "tongue-out" : "stand");
                 }
+
                 if (Velocity.Y < 0)
                 {
                     if (_isHoldingEgg)
@@ -498,13 +507,6 @@ namespace YoshiLand.GameObjects
                     {
                         SetYoshiAnimation("fall");
                     }
-                }
-                if (_isLookingUp && IsOnGround)
-                {
-                    if (_tongueState != TongueState.None)
-                        SetYoshiAnimation("tongue-out-up");
-                    else if (!_isSpitting)
-                        SetYoshiAnimation("look-up");
                 }
             }
         }
@@ -774,7 +776,7 @@ namespace YoshiLand.GameObjects
 
         public void Bounce()
         {
-            Physics.ApplyJump(15f);
+            Physics.ApplyJump(750f);
         }
         #endregion
     }

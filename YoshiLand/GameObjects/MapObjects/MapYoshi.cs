@@ -9,10 +9,10 @@ namespace YoshiLand.GameObjects.MapObjects
 {
     public class MapYoshi : GameObject
     {
-        private const float MoveSpeed = 0.9f;
-        private AnimatedSprite _sprite;
-        private Vector2 _velocity;
+        private const float MoveSpeed = 70f;
+        private readonly AnimatedSprite _sprite;
         private readonly TiledMapObject[] _objects;
+        private Vector2 _velocity;
         private string _stageName = string.Empty;
         private bool _wasOnStagePoint = false;
 
@@ -41,29 +41,30 @@ namespace YoshiLand.GameObjects.MapObjects
 
         private void HandleInput(GameTime gameTime)
         {
+            float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             _velocity = Vector2.Zero;
             if (GameControllerSystem.MoveUp())
             {
-                _velocity.Y = -MoveSpeed;
+                _velocity.Y = -MoveSpeed * elapsedTime;
                 if (_sprite.CurrentAnimation != "walk-back")
                     _sprite.SetAnimation("walk-back");
             }
             else if (GameControllerSystem.MoveDown())
             {
-                _velocity.Y = MoveSpeed;
+                _velocity.Y = MoveSpeed * elapsedTime;
                 if (_sprite.CurrentAnimation != "walk")
                     _sprite.SetAnimation("walk");
             }
             if (GameControllerSystem.MoveLeft())
             {
-                _velocity.X = -MoveSpeed;
+                _velocity.X = -MoveSpeed * elapsedTime;
                 if (_sprite.CurrentAnimation != "walk-side")
                     _sprite.SetAnimation("walk-side");
                 _sprite.Effect = SpriteEffects.FlipHorizontally;
             }
             else if (GameControllerSystem.MoveRight())
             {
-                _velocity.X = MoveSpeed;
+                _velocity.X = MoveSpeed * elapsedTime;
                 if (_sprite.CurrentAnimation != "walk-side")
                     _sprite.SetAnimation("walk-side");
                 _sprite.Effect = SpriteEffects.None;
