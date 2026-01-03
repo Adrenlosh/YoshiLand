@@ -1,61 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" class="GameMap" orientation="orthogonal" renderorder="right-down" width="320" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="3230">
+<map version="1.10" tiledversion="1.11.2" class="GameMap" orientation="orthogonal" renderorder="right-down" width="300" height="24" tilewidth="16" tileheight="16" infinite="0" nextlayerid="25" nextobjectid="3230">
  <properties>
   <property name="Song" value="song1"/>
  </properties>
  <tileset firstgid="1" source="tileset.tsx"/>
- <imagelayer id="7" name="Background" parallaxx="0.1" repeatx="1">
-  <image source="background2.png" width="512" height="432"/>
+ <tileset firstgid="4097" source="Tileset/tileset0.tsx"/>
+ <imagelayer id="21" name="1" repeatx="1">
+  <image source="Background/0/1.png" width="576" height="324"/>
  </imagelayer>
- <layer id="11" name="Back" width="320" height="27">
+ <imagelayer id="22" name="2" parallaxx="0.5" parallaxy="0.9" repeatx="1">
+  <image source="Background/0/2.png" width="576" height="324"/>
+ </imagelayer>
+ <imagelayer id="23" name="3" parallaxx="0.6" parallaxy="0.95" repeatx="1">
+  <image source="Background/0/3.png" width="576" height="324"/>
+ </imagelayer>
+ <imagelayer id="24" name="4" parallaxx="0.7" repeatx="1">
+  <image source="Background/0/4.png" width="576" height="324"/>
+ </imagelayer>
+ <layer id="1" name="Ground" width="300" height="24">
   <data encoding="base64" compression="zlib">
-   eJztwQEBAAAAgiD/r25IQAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPBohwAAAQ==
+   eJzt2EtOwzAUBdBMER9lTklhADvpiC6O735xJCxFIQW7RU7jnCNdqVLdlze6cto0AAAAAAAAAAAAAAAAAAAAAACsyWXbNFejXLdpv71JPAfwH7rQObch2+/0n+8Te+hBXwEFdYOeir11bn31Ep7zGvIW8p7wzMdw5kmXQnW6wd1qe2Z9FXvqY7Db5x+91XfVPuRZZ0F1xu+Dpftq1/7MVE+NM9VbsaviGZ0Fy3DRzpu7jJ7YzLyriMybQ/eS+F/Vb9+Pz+Sez7mj9abeSUvtuZaZS9jRzDpnpp5J3SNldu7MY/uq9J61zVzCjmaua2ZuHx47+5TfnHq/KrXnGmYuYUcz652Zcu4LkJXQfA==
   </data>
  </layer>
- <layer id="1" name="Ground" width="320" height="27">
+ <layer id="3" name="Decorations" width="300" height="24" visible="0">
   <data encoding="base64" compression="zlib">
-   eJzt2ttqhDAUBVCZlt5ep5f//9MqNFSCxkQdM07WgsAh7BnO0yEhdt0615W/Azg78w9olfkHtMr8A1pl/gEAAAAAAHgzAdpk9gEtMvuAFs3Nvud+Xfr1FNXxHsAZpc59L/366NdbVMd7AGezdOcdZtz73xrX8R7A0a4Z65JYS4bzXTjvjet4D+Asct86hhn32v3fc0Md7wE8muFuG8544zreA3g07r9Aq9x/gVa5/wK1TX2DnPttcq21tt9Q57xtz63U/5b0ICsrWz879Q1y7rfJP93tfS30UNJvqLfYqwdZWdn62alvkHO/Tf7ubu9zoYeSfkO9xV49yMrK1s+GOTj3Hpt6mz3y/DfXQ0m/od5irx5kZWXrZ6feYOfqeO+o81+qh5J+Q73FXj3IysreRzacCZfqeO+o81+qh5J+Q73FXj3IysrWz/4CY601NA==
-  </data>
- </layer>
- <layer id="3" name="Decorations" width="320" height="27">
-  <data encoding="base64" compression="zlib">
-   eJztwQEBAAAAgiD/r25IQAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPBohwAAAQ==
+   eJzt2MEJACEMBEBLSFO2ozXYuYj48xOQg4MZCMkj28CWAgAAAAAAAAAAAAAAAAAAAMArPfZukcvV5D8AAAAAAPxRtj+/WZ36mUzmKyPuNwAAAAAAvDABvNsERw==
   </data>
  </layer>
  <objectgroup id="2" name="Objects">
-  <object id="16" name="Player" type="SpawnPoint" x="32" y="304">
+  <object id="16" name="Player" type="SpawnPoint" x="64" y="288">
    <properties>
     <property name="Name" value="Entry"/>
    </properties>
    <point/>
   </object>
-  <object id="35" name="Goal" x="4448" y="202" width="28" height="134"/>
-  <object id="3183" name="SpawnPoint" type="SpawnPoint" x="4384" y="304">
+  <object id="35" name="Goal" x="4464" y="186" width="28" height="134"/>
+  <object id="3183" name="SpawnPoint" type="SpawnPoint" x="4384" y="288">
    <properties>
     <property name="Name" value="Point1"/>
    </properties>
    <point/>
   </object>
-  <object id="3225" name="Spring" x="528" y="176">
+  <object id="3225" name="Spring" x="304" y="16">
    <point/>
   </object>
-  <object id="3226" name="Enemy" x="512" y="176">
+  <object id="3226" name="Enemy" x="288" y="16">
    <point/>
   </object>
-  <object id="3227" name="Enemy" x="544" y="176">
+  <object id="3227" name="Enemy" x="320" y="16">
    <point/>
   </object>
-  <object id="3228" name="Door" type="Portal" x="208" y="304">
+  <object id="3228" name="Door" type="Portal" x="336" y="16">
    <properties>
     <property name="TargetMap" value="map1"/>
     <property name="TargetPoint" value="Entry"/>
    </properties>
    <point/>
   </object>
-  <object id="3229" name="Point" type="SpawnPoint" x="304" y="304">
+  <object id="3229" name="SpawnPoint" type="SpawnPoint" x="352" y="16">
    <properties>
     <property name="Name" value="Point0"/>
-    <property name="TargetMap" value="map1"/>
    </properties>
    <point/>
   </object>

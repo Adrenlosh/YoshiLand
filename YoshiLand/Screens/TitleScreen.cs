@@ -1,14 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
 using MonoGame.Extended.Screens;
 using MonoGame.Extended.Screens.Transitions;
-using System;
-using YoshiLand.Enums;
-using YoshiLand.Models;
-using YoshiLand.Rendering;
 using YoshiLand.Systems;
-using YoshiLand.Transitions;
 using YoshiLand.UI;
 
 namespace YoshiLand.Screens
@@ -17,11 +11,6 @@ namespace YoshiLand.Screens
     {
         private SpriteBatch _spriteBatch;
         private TitleScreenUI _ui;
-        //private Stage _stage;
-        //private MaskTransition _maskTransition;
-
-        //private GameSceneRender _gameSceneRenderer;
-        //private ObjectCollisionSystem _objectCollisionSystem;
         private Texture2D _logo;
         private Texture2D _backgroundPattern;
 
@@ -39,7 +28,6 @@ namespace YoshiLand.Screens
 
         public override void UnloadContent()
         {
-           // _stage.CloseStage();
             base.UnloadContent();
         }
 
@@ -55,13 +43,6 @@ namespace YoshiLand.Screens
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _logo = Content.Load<Texture2D>("Images/logo");
             _backgroundPattern = Content.Load<Texture2D>("Images/background-pattern");
-            //_maskTransition = new MaskTransition(GraphicsDevice, Content, TransitionType.In | TransitionType.Out, 2);
-            //_stage = StagesSystem.GetStageByName("grassland1");
-            //_gameSceneRenderer = new GameSceneRender(GraphicsDevice, Game.Window, Content);
-            //_gameSceneRenderer.LoadContent();
-            //_gameSceneRenderer.LoadMap(_stage.StartStage());
-            //_objectCollisionSystem = new ObjectCollisionSystem();
-            //GameObjectsSystem.Player.CanHandleInput = true;
             SongSystem.Play("title");
             InitializeUI();
             base.LoadContent();
@@ -69,25 +50,15 @@ namespace YoshiLand.Screens
 
         public override void Update(GameTime gameTime)
         {
-            //GameObjectsSystem.InactivateObejcts(_gameSceneRenderer.GetScreenBounds());
-            //GameObjectsSystem.ActivateObjects(_gameSceneRenderer.GetScreenBounds());
-            //GameObjectsSystem.Update(gameTime);
-            //_maskTransition.Update(gameTime);
-            //_objectCollisionSystem.Update(gameTime);
-            //_gameSceneRenderer.Update(gameTime, GameObjectsSystem.Player.Position, true, GameObjectsSystem.Player.FaceDirection, GameObjectsSystem.Player.Velocity);
+            if (GameControllerSystem.BackPressed())
+            {
+                Game.Exit();
+            }
         }
 
         public override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(new Color(113, 191, 69));
-            //_gameSceneRenderer.Draw(GameObjectsSystem.GetAllActiveObjects());
-            //_maskTransition.Draw(gameTime);
-            //_spriteBatch.Begin(transformMatrix: _gameSceneRenderer.ViewportAdapter.GetScaleMatrix());
-            //if (_maskTransition.State == TransitionState.Out && _maskTransition.Value != 0)
-            //{
-            //    _spriteBatch.FillRectangle(_gameSceneRenderer.ViewportAdapter.BoundingRectangle, Color.Black);
-            //}
-            //_spriteBatch.End();
             _spriteBatch.Begin(samplerState: SamplerState.PointWrap);
             Rectangle screenBounds = GraphicsDevice.PresentationParameters.Bounds;
             Rectangle sourceRect = new Rectangle(0, 0, screenBounds.Width, screenBounds.Height);

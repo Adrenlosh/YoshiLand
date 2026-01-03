@@ -173,4 +173,7 @@ x {0}</value>
   <data name="BackToTitleMenu" xml:space="preserve">
     <value>回主菜单</value>
   </data>
+  <data name="Exit" xml:space="preserve">
+    <value>退出</value>
+  </data>
 </root>

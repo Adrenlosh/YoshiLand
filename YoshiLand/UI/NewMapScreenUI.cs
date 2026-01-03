@@ -6,7 +6,6 @@ using MLEM.Textures;
 using MLEM.Ui;
 using MLEM.Ui.Elements;
 using System;
-using System.ComponentModel.DataAnnotations;
 using YoshiLand.Models;
 
 namespace YoshiLand.UI
@@ -21,6 +20,7 @@ namespace YoshiLand.UI
         private SpriteAnimationImage _animationImage;
 
         public event Action<int> OnStageSelected;
+        public event Action OnExitPressed;
         public NewMapScreenUI(World world, Texture2D mapYoshiTexture) : base(Anchor.TopLeft, new Vector2(GlobalConfig.VirtualResolution_Width, GlobalConfig.VirtualResolution_Height))
         {
             Texture = null;
@@ -31,16 +31,13 @@ namespace YoshiLand.UI
                 new TextureRegion(mapYoshiTexture, new Rectangle(128, 0, 16, 16)),
                 new TextureRegion(mapYoshiTexture, new Rectangle(96, 0, 16, 16)),
             ];
-            _animationImage = new SpriteAnimationImage(Anchor.TopLeft, new Vector2(16), new SpriteAnimation(0.2f, animation));
+            _animationImage = new SpriteAnimationImage(Anchor.TopLeft, new Vector2(16), new SpriteAnimation(0.2f, animation)) { PositionOffset = world.ThumbnailPositions[0] };
 
-            _worldParagraph = AddChild(new Paragraph(Anchor.TopCenter, GlobalConfig.VirtualResolution_Width, world.DisplayName, TextAlignment.Center));
-            _worldParagraph.TextColor = Color.Black;
-
-            AddChild(new Paragraph(Anchor.TopLeft, GlobalConfig.VirtualResolution_Width, string.Format(Language.Strings.LifeLeftOnHud, GameMain.PlayerStatus.LifeLeft), false));
+            _worldParagraph = AddChild(new Paragraph(Anchor.TopCenter, GlobalConfig.VirtualResolution_Width, world.DisplayName, TextAlignment.Center){ TextColor = Color.Black }) ;
 
             _generalPanel = AddChild(new Panel(Anchor.Center, new Vector2(250, 220)));
 
-            _stageParagraph = _generalPanel.AddChild(new Paragraph(Anchor.AutoLeft, 246, ":)", TextAlignment.Center));
+            _stageParagraph = _generalPanel.AddChild(new Paragraph(Anchor.AutoLeft, 246, Language.Strings.Exit, TextAlignment.Center));
 
             _generalPanel.AddChild(new VerticalSpace(3));
 
@@ -53,8 +50,9 @@ namespace YoshiLand.UI
 
             Panel buttonPanel = _generalPanel.AddChild(new Panel(Anchor.AutoCenter, new Vector2(250, 49)));
 
-            var backButton = buttonPanel.AddChild(new Button(Anchor.AutoLeft, new Vector2(30, 40), "Exit"));
-            backButton.OnSelected += (b) => { _stageParagraph.Text = ":)"; };
+            var backButton = buttonPanel.AddChild(new Button(Anchor.AutoLeft, new Vector2(30, 40), Language.Strings.Exit));
+            backButton.OnSelected += (b) => { _stageParagraph.Text = Language.Strings.Exit; };
+            backButton.OnPressed += (b) => { OnExitPressed?.Invoke(); };
 
             for (int i = 1; i <= 5; i++)
             {

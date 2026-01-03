@@ -13,7 +13,7 @@ using YoshiLand.Enums;
 using YoshiLand.GameObjects;
 using YoshiLand.Systems;
 
-namespace YoshiLand.Rendering
+namespace YoshiLand.Render
 {
     public enum FadeType
     {

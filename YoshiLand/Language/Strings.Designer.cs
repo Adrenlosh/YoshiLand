@@ -108,6 +108,15 @@ namespace YoshiLand.Language {
         }
         
         /// <summary>
+        ///   查找类似 Exit 的本地化字符串。
+        /// </summary>
+        internal static string Exit {
+            get {
+                return ResourceManager.GetString("Exit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Yoshi Land 的本地化字符串。
         /// </summary>
         internal static string GameName {

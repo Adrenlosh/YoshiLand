@@ -6,16 +6,18 @@ using MonoGame.Extended.Graphics;
 using MonoGame.Extended.Screens;
 using MonoGame.Extended.Screens.Transitions;
 using MonoGame.Extended.Tiled;
+using System;
 using System.Linq;
 using YoshiLand.Enums;
 using YoshiLand.GameObjects;
 using YoshiLand.GameObjects.MapObjects;
 using YoshiLand.Models;
-using YoshiLand.Rendering;
+using YoshiLand.Render;
 using YoshiLand.Systems;
 
 namespace YoshiLand.Screens
 {
+    [Obsolete("Use NewMapScreen instead.")]
     public class MapScreen : GameScreen
     {
         private AnimatedSprite _animatedSprite;

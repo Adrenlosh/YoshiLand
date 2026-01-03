@@ -10,8 +10,8 @@
 
 #-------------------------------- References --------------------------------#
 
-/reference:..\pipeline-references\MonoGame.Extended.dll
 /reference:..\pipeline-references\MonoGame.Extended.Content.Pipeline.dll
+/reference:..\pipeline-references\MonoGame.Extended.dll
 
 #---------------------------------- Content ---------------------------------#
 
@@ -329,6 +329,66 @@
 #begin Stages/2/2.xml
 /copy:Stages/2/2.xml
 
+#begin Tilemaps/Background/0/1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Tilemaps/Background/0/1.png;Tilemaps/Background/0/1
+
+#begin Tilemaps/Background/0/2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Tilemaps/Background/0/2.png;Tilemaps/Background/0/2
+
+#begin Tilemaps/Background/0/3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Tilemaps/Background/0/3.png;Tilemaps/Background/0/3
+
+#begin Tilemaps/Background/0/4.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Tilemaps/Background/0/4.png;Tilemaps/Background/0/4
+
+#begin Tilemaps/Background/0/orig.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Tilemaps/Background/0/orig.png;Tilemaps/Background/0/orig
+
 #begin Tilemaps/background1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -413,6 +473,23 @@
 /importer:TiledMapTilesetImporter
 /processor:TiledMapTilesetProcessor
 /build:Tilemaps/tileset.tsx
+
+#begin Tilemaps/Tileset/tileset0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Tilemaps/Tileset/tileset0.png;Tilemaps/Tileset/tileset0
+
+#begin Tilemaps/Tileset/tileset0.tsx
+/importer:TiledMapTilesetImporter
+/processor:TiledMapTilesetProcessor
+/build:Tilemaps/Tileset/tileset0.tsx;Tilemaps/Tileset/tileset0
 
 #begin Worlds/1/thumbnail.png
 /importer:TextureImporter

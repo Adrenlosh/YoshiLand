@@ -22,7 +22,13 @@ namespace YoshiLand.Screens
         {
             _ui = new NewMapScreenUI(StagesSystem.Worlds[0], Content.Load<Texture2D>("Atlas/map-yoshi"));
             _ui.OnStageSelected += OnStageSelected;
+            _ui.OnExitPressed += OnExitPressed;
             GameMain.UiSystem.Add("Root", _ui);
+        }
+
+        private void OnExitPressed()
+        {
+            Game.Screens.ReplaceScreen(new TitleScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
         }
 
         private void OnStageSelected(int obj)

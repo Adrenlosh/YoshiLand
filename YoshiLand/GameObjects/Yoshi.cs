@@ -39,7 +39,10 @@ namespace YoshiLand.GameObjects
         private const float BaseJumpForce = 4.15f;
         private const float Gravity = 30f;
         private const float PlummetGravity = 50f;
+        private const float TurnFriction = 0.9f;
+        private const float NormalFriction = 0.6f;
 
+        private const float TurnAnimationDuration = 0.1f;
         private const float ThrowingAnimationDuration = 0.5f;
         private const float MaxFloatTime = 0.8f;
         private const float MaxJumpHoldTime = 0.35f;
@@ -77,6 +80,9 @@ namespace YoshiLand.GameObjects
 
         private float _hurtTimer = 0;
         private float _dieTimer = 0;
+        private float _turnTimer = 0f;
+        private float _jumpHoldTime = 0f;
+        private float _floatTime;
 
         private bool _isSquating = false;
         private bool _isLookingUp = false;
@@ -87,11 +93,11 @@ namespace YoshiLand.GameObjects
         private bool _isFloating = false;
         private bool _isDie = false;
         private bool _isHurt = false;
-        private float _floatTime;
+        private bool _isTurning = false;
         private bool _isJumping = false;
         private bool _canJump = true;
         private bool _jumpInitiated = false;
-        private float _jumpHoldTime = 0f;
+       
 
         public override Point SpriteSize => _yoshiSprite.Size;
         public override Vector2 CenterBottomPosition
@@ -287,11 +293,18 @@ namespace YoshiLand.GameObjects
                 currentDirection = -1;
                 _hasThrownEgg = false;
             }
-            if (GameControllerSystem.MoveRight() && !_isSquating && !_isLookingUp)
+            else if (GameControllerSystem.MoveRight() && !_isSquating && !_isLookingUp)
             {
                 Physics.ApplyAcceleration(Acceleration * elapsedTime, isAttackButtonHeld ? MaxSpeed : WalkMaxSpeed);
                 currentDirection = 1;
                 _hasThrownEgg = false;
+            }
+
+            if (!_isHoldingEgg && _tongueState == 0 && currentDirection != 0 && _lastDirection != 0 && currentDirection != _lastDirection && Math.Abs(Velocity.X) > 0.5f && IsOnGround)
+            {
+                _isTurning = true;
+                _turnTimer = 0;
+                Physics.GroundFriction = TurnFriction;
             }
 
             bool isJumpButtonPressed = GameControllerSystem.JumpPressed();
@@ -415,6 +428,10 @@ namespace YoshiLand.GameObjects
             {
                 SetYoshiAnimation("hurt");
             }
+            else if(_isTurning)
+            {
+                SetYoshiAnimation("turn");
+            }
             else if (_isSquating)
             {
                 SetYoshiAnimation("squat");
@@ -445,7 +462,7 @@ namespace YoshiLand.GameObjects
             {
                 if (_tongueState != TongueState.None)
                     SetYoshiAnimation("tongue-out-up");
-                else 
+                else
                     SetYoshiAnimation("look-up");
             }
             else
@@ -560,6 +577,15 @@ namespace YoshiLand.GameObjects
                     _isHurt = false;
                     _yoshiSprite.Alpha = 1f;
                     CanHandleInput = true;
+                }
+            }
+            if (_isTurning)
+            {
+                _turnTimer += elapsedTime;
+                if (_turnTimer >= TurnAnimationDuration)
+                {
+                    _isTurning = false;
+                    Physics.GroundFriction = NormalFriction;
                 }
             }
             if (_isPlummeting && !IsOnGround)
@@ -776,7 +802,7 @@ namespace YoshiLand.GameObjects
 
         public void Bounce()
         {
-            Physics.ApplyJump(750f);
+            Physics.ApplyJump(BaseJumpForce * 2);
         }
         #endregion
     }

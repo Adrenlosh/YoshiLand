@@ -42,10 +42,7 @@ namespace YoshiLand.Screens
             if (_timer > 0.2f && _timer <= 1.3f)
             {
                 SizeF line1Size = _bitmapFont.MeasureString(Language.Strings.StageStart);
-                //SizeF line2Size = _bitmapFont.MeasureString(_stage.Description);
-                
                 _spriteBatch.DrawString(_bitmapFont, Language.Strings.StageStart, new Vector2(GameMain.ViewportAdapter.VirtualWidth / 2 - line1Size.Width / 2, GameMain.ViewportAdapter.VirtualHeight / 2 - line1Size.Height / 2), Color.OrangeRed, GameMain.ViewportAdapter.BoundingRectangle);
-                //_spriteBatch.DrawString(_bitmapFont, _stage.Description, new Vector2(GameMain.ViewportAdapter.VirtualWidth / 2 - line2Size.Width / 2, (GameMain.ViewportAdapter.VirtualHeight / 2 - line2Size.Height / 2) + line1Size.Height + 2), Color.White, GameMain.ViewportAdapter.BoundingRectangle);
             }
             _spriteBatch.End();
         }
@@ -57,7 +54,6 @@ namespace YoshiLand.Screens
             {
                 _timer += elapsedTime;
             }
-
             if(_timer >= DisplayDuration)
             {
                 _timer = -1f;

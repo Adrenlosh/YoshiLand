@@ -9,7 +9,7 @@ using System.Linq;
 using YoshiLand.Enums;
 using YoshiLand.GameObjects;
 using YoshiLand.Models;
-using YoshiLand.Rendering;
+using YoshiLand.Render;
 using YoshiLand.Systems;
 using YoshiLand.UI;
 
@@ -252,7 +252,7 @@ namespace YoshiLand.Screens
         {
             if (GameMain.PlayerStatus.LifeLeft > 0)
             {
-                Game.Screens.ReplaceScreen(new MapScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
+                Game.Screens.ReplaceScreen(new NewMapScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
             }
             else
             {

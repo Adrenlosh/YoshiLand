@@ -51,9 +51,10 @@ namespace YoshiLand.GameObjects
         public override void OnCollision(GameObject other, ObjectCollisionResult collision)
         {
             base.OnCollision(other, collision);
+            other.Physics.ApplyJump(100f);
             if (collision.Direction == CollisionDirection.Top && Status == SpringStatus.Normal)
             {
-                Compress();
+                //Compress();
             }
         }
 
