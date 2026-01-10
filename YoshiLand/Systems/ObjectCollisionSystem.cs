@@ -145,6 +145,15 @@ namespace YoshiLand.Systems
                         OnSwitchMap?.Invoke(door.TargetMap, door.TargetPoint);
                     }
                 }
+                else if(collidable is Platform platform)
+                {
+                    var collisionResult = GameObjectsSystem.CheckObjectCollision(platform);
+                    if (collisionResult.CollidedObject != null && collisionResult.CollidedObject == player)
+                    {
+                        player.OnCollision(platform, collisionResult);
+                        platform.OnCollision(player, collisionResult);
+                    }
+                }
             }
         }
 

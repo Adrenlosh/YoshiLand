@@ -156,8 +156,8 @@ namespace YoshiLand.Systems
 
                 if (testPosition.Y < 0 && HasCollisions) // 瓦片地图顶部
                 {
-                    newPosition.Y = 0;
-                    _targetObject.Velocity = new Vector2(_targetObject.Velocity.X, 0);
+                    //newPosition.Y = 0;
+                    //_targetObject.Velocity = new Vector2(_targetObject.Velocity.X, 0);
                 }
                 else
                 {

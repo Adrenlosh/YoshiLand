@@ -102,7 +102,7 @@ namespace YoshiLand.Screens
             if (_isPlayerDie)
             {
                 GameObjectsSystem.Player.Update(gameTime);
-                _gameSceneRenderer.Update(gameTime, _cameraLockPosition, true,
+                _gameSceneRenderer.Update(gameTime, _cameraLockPosition, false,
                     GameObjectsSystem.Player.FaceDirection, Vector2.Zero);
                 _ui.Update(gameTime, _remainingTime);
                 CheckBackButton();

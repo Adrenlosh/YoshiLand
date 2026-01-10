@@ -100,6 +100,14 @@ namespace YoshiLand.GameObjects
             return door;
         }
 
+        public Platform CreatePlatform(Vector2 position, TiledMap tilemap)
+        {
+            Texture2D texture = _contentManager.Load<Texture2D>("Atlas/platform");
+            Platform platform = new Platform(texture, tilemap);
+            platform.Position = position;
+            return platform;
+        }
+
         public static SpriteSheet LoadAnimationsFromXml(ContentManager content, string xmlName, string spriteSheetName)
         {
             string filePath = Path.Combine(content.RootDirectory, "Atlas", "Animation", xmlName);

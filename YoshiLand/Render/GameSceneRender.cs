@@ -81,7 +81,7 @@ namespace YoshiLand.Render
         {
             _tilemap = map;
             _tilemapRenderer = new TiledMapRenderer(_graphicsDevice, _tilemap);
-            _camera.EnableWorldBounds(new Rectangle(0, 0, _tilemap.WidthInPixels, _tilemap.HeightInPixels));
+            //_camera.EnableWorldBounds(new Rectangle(0, 0, _tilemap.WidthInPixels, _tilemap.HeightInPixels));
             _camera.IsZoomClampedToWorldBounds = false;
         }
 

@@ -85,6 +85,10 @@ namespace YoshiLand.Models
                         door.TargetPoint = obj.Properties.TryGetValue("TargetPoint", out TiledMapPropertyValue targetPointValue) ? targetPointValue.ToString() : string.Empty;
                         GameObjectsSystem.AddGameObject(door);
                         break;
+                    case "Platform":
+                        var platform = gameObjectFactory.CreatePlatform(obj.Position, map);
+                        GameObjectsSystem.AddGameObject(platform);
+                        break;
                     default:
                         break;
                 }
