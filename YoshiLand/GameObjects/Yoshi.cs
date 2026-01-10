@@ -42,6 +42,7 @@ namespace YoshiLand.GameObjects
         private const float TurnFriction = 0.9f;
         private const float NormalFriction = 0.6f;
 
+        private const float InvincibilityDuration = 1.2f;
         private const float TurnAnimationDuration = 0.1f;
         private const float ThrowingAnimationDuration = 0.5f;
         private const float MaxFloatTime = 0.8f;
@@ -78,10 +79,11 @@ namespace YoshiLand.GameObjects
 
         private int _lastDirection = 1;
 
+        private float _invincibilityTimer = 0;
         private float _hurtTimer = 0;
         private float _dieTimer = 0;
-        private float _turnTimer = 0f;
-        private float _jumpHoldTime = 0f;
+        private float _turnTimer = 0;
+        private float _jumpHoldTime = 0;
         private float _floatTime;
 
         private bool _isSquating = false;
@@ -97,7 +99,7 @@ namespace YoshiLand.GameObjects
         private bool _isJumping = false;
         private bool _canJump = true;
         private bool _jumpInitiated = false;
-       
+        private bool _isInvincible = false;
 
         public override Point SpriteSize => _yoshiSprite.Size;
         public override Vector2 CenterBottomPosition
@@ -167,7 +169,7 @@ namespace YoshiLand.GameObjects
 
         public void TakeDamage(int damage, GameObject source)
         {
-            if (!_isDie && !_isHurt)
+            if (!_isDie && !_isHurt && !_isInvincible)
             {
                 Velocity = new Vector2(6 * -_lastDirection, 0);
                 Health -= damage;
@@ -186,6 +188,7 @@ namespace YoshiLand.GameObjects
         {
             CanHandleInput = false;
             _isHurt = true;
+            _isInvincible = true;
             SFXSystem.Play("yoshi-hurt");
         }
 
@@ -300,7 +303,7 @@ namespace YoshiLand.GameObjects
                 _hasThrownEgg = false;
             }
 
-            if (!_isHoldingEgg && _tongueState == 0 && currentDirection != 0 && _lastDirection != 0 && currentDirection != _lastDirection && Math.Abs(Velocity.X) > 0.5f && IsOnGround)
+            if (!_isHoldingEgg && _tongueState == 0 && currentDirection != 0 && _lastDirection != 0 && currentDirection != _lastDirection && Math.Abs(Velocity.X) > 0.1f && IsOnGround)
             {
                 _isTurning = true;
                 _turnTimer = 0;
@@ -568,15 +571,22 @@ namespace YoshiLand.GameObjects
             if(_isHurt)
             {
                 _hurtTimer += elapsedTime;
-                float blinkTime = 0.01f;
-                int blinkCount = (int)(_hurtTimer / blinkTime);
-                _yoshiSprite.Alpha = (blinkCount % 2 == 0) ? 1f : 0.5f;
                 if (_hurtTimer >= HurtDuration)
                 {
                     _hurtTimer = 0;
                     _isHurt = false;
-                    _yoshiSprite.Alpha = 1f;
                     CanHandleInput = true;
+                }
+            }
+            if (_isInvincible)
+            {
+                _invincibilityTimer += elapsedTime;
+                _yoshiSprite.Alpha = _invincibilityTimer / 0.2f % 2 == 0 ? 1f : 0.8f;
+                if (_invincibilityTimer >= InvincibilityDuration)
+                {
+                    _invincibilityTimer = 0;
+                    _isInvincible = false;
+                    _yoshiSprite.Alpha = 1f;
                 }
             }
             if (_isTurning)

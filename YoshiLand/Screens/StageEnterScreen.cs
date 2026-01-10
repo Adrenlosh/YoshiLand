@@ -7,6 +7,7 @@ using MonoGame.Extended.Screens.Transitions;
 using System;
 using YoshiLand.Enums;
 using YoshiLand.Models;
+using YoshiLand.Transitions;
 
 namespace YoshiLand.Screens
 {

@@ -19,12 +19,12 @@
  </imagelayer>
  <layer id="1" name="Ground" width="300" height="24">
   <data encoding="base64" compression="zlib">
-   eJzt2EtOwzAUBdBMER9lTklhADvpiC6O735xJCxFIQW7RU7jnCNdqVLdlze6cto0AAAAAAAAAAAAAAAAAAAAAACsyWXbNFejXLdpv71JPAfwH7rQObch2+/0n+8Te+hBXwEFdYOeir11bn31Ep7zGvIW8p7wzMdw5kmXQnW6wd1qe2Z9FXvqY7Db5x+91XfVPuRZZ0F1xu+Dpftq1/7MVE+NM9VbsaviGZ0Fy3DRzpu7jJ7YzLyriMybQ/eS+F/Vb9+Pz+Sez7mj9abeSUvtuZaZS9jRzDpnpp5J3SNldu7MY/uq9J61zVzCjmaua2ZuHx47+5TfnHq/KrXnGmYuYUcz652Zcu4LkJXQfA==
+   eJzt2stOwzAQBdBsEQ9lX2hhAUvgJ1jBx/H8X4zUSJZJVbtRnUfPkUbdTKezunLcNA0AAAAAAAAAAADHdt42zcW2LtuxtwHYbR0yahNqFepWXgET1uXVRl4BEyevgLmQV8DY4nv0tLp79b4ed+7AFMVnK2csYMrivFolefUYPp+Seo6y7EquARWto5wqfafhTl4BFcXvXqXnq31q5dV7+J2PUJ+hvjJ+8z70PMhSWJwh91fHzqsup76j3X725NZfVr2FepVZsDjp82DtvHpp/1dfTqXVl1tdVnU9Mgvm4awdt24KcuJ65F2VUuPWrnNJ/D9gbk9pf+k7EX3PpLX2PJWZc9jRzGXOzO3J3SNndunMQ/Oq9p5LmzmHHc08rZmleXjo7CHfGXq+qrXnKcycw45mLndmTt8vqvLYYg==
   </data>
  </layer>
- <layer id="3" name="Decorations" width="300" height="24" visible="0">
+ <layer id="3" name="Decorations" width="300" height="24">
   <data encoding="base64" compression="zlib">
-   eJzt2MEJACEMBEBLSFO2ozXYuYj48xOQg4MZCMkj28CWAgAAAAAAAAAAAAAAAAAAAMArPfZukcvV5D8AAAAAAPxRtj+/WZ36mUzmKyPuNwAAAAAAvDABvNsERw==
+   eJzt2LEJACAMBMCM4FKu4w5uLhZ2NoKa5g4evgmk/ggAAAAAAAAAAAAAAAAAAAAAstWS/QEAAAAAALzXLuzhc1NfObn5pZd9BwAAAACAGwaWVQNK
   </data>
  </layer>
  <objectgroup id="2" name="Objects">
@@ -41,23 +41,23 @@
    </properties>
    <point/>
   </object>
-  <object id="3225" name="Spring" x="304" y="16">
+  <object id="3225" name="Spring" x="752" y="48">
    <point/>
   </object>
-  <object id="3226" name="Enemy" x="288" y="16">
+  <object id="3226" name="Enemy" x="736" y="48">
    <point/>
   </object>
-  <object id="3227" name="Enemy" x="320" y="16">
+  <object id="3227" name="Enemy" x="768" y="48">
    <point/>
   </object>
-  <object id="3228" name="Door" type="Portal" x="336" y="16">
+  <object id="3228" name="Door" type="Portal" x="784" y="48">
    <properties>
     <property name="TargetMap" value="map1"/>
     <property name="TargetPoint" value="Entry"/>
    </properties>
    <point/>
   </object>
-  <object id="3229" name="SpawnPoint" type="SpawnPoint" x="352" y="16">
+  <object id="3229" name="SpawnPoint" type="SpawnPoint" x="800" y="48">
    <properties>
     <property name="Name" value="Point0"/>
    </properties>

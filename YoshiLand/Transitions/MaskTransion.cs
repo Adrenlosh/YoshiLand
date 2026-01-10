@@ -1,10 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
+using MonoGame.Extended.Screens.Transitions;
 using YoshiLand.Enums;
-using YoshiLand.Transitions;
 
-namespace MonoGame.Extended.Screens.Transitions;
+namespace YoshiLand.Transitions;
 
 public class MaskTransition : Transition
 {

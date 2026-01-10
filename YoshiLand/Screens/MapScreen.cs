@@ -14,6 +14,7 @@ using YoshiLand.GameObjects.MapObjects;
 using YoshiLand.Models;
 using YoshiLand.Render;
 using YoshiLand.Systems;
+using YoshiLand.Transitions;
 
 namespace YoshiLand.Screens
 {

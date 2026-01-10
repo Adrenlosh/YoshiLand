@@ -1,0 +1,19 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Libraries/">
+    <Project Path="Monogame-Extended/source/MonoGame.Extended.Content.Pipeline/MonoGame.Extended.Content.Pipeline.csproj" />
+    <Project Path="Monogame-Extended/source/MonoGame.Extended/MonoGame.Extended.csproj" />
+  </Folder>
+  <Folder Name="/Platforms/">
+    <Project Path="YoshiLand.Android/YoshiLand.Android.csproj">
+      <Deploy />
+    </Project>
+    <Project Path="YoshiLand.DesktopGL/YoshiLand.DesktopGL.csproj" />
+    <Project Path="YoshiLand.WindowsDX/YoshiLand.WindowsDX.csproj" />
+  </Folder>
+  <Project Path="YoshiLand/YoshiLand.csproj" />
+</Solution>

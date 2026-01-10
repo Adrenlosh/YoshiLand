@@ -41,6 +41,7 @@ namespace YoshiLand
                 PreferredBackBufferHeight = GlobalConfig.VirtualResolution_Height,
             };
             _graphicsDeviceManager.ApplyChanges();
+            Services.AddService(_graphicsDeviceManager);
             _screenManager = new ScreenManager();
             Components.Add(_screenManager);
             IsMouseVisible = true;
@@ -94,10 +95,7 @@ namespace YoshiLand
 #if !DEBUG
             _screenManager.ShowScreen(new LogoScreen(this), new FadeTransition(GraphicsDevice, Color.Black, 1f));
 #else
-            //LoadScreen(new TitleScreen(this));
-            //_screenManager.ShowScreen(new GamingScreen(this, StageSystem.GetStageByName("grassland1")));
-            //_screenManager.ShowScreen(new TitleScreen(this), new FadeTransition(GraphicsDevice, Color.Black, 0.2f));
-            _screenManager.ShowScreen(new NewMapScreen(this));
+            _screenManager.ShowScreen(new GamingScreen(this, StagesSystem.Worlds[0].Stages[0]));
 #endif
             base.LoadContent();
         }

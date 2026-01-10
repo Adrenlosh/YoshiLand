@@ -18,17 +18,17 @@
  </tile>
  <tile id="10" type="GameTile">
   <properties>
-   <property name="TileType" propertytype="TileType" value="Blocking"/>
+   <property name="TileType" propertytype="TileType" value="Platform"/>
   </properties>
  </tile>
  <tile id="11" type="GameTile">
   <properties>
-   <property name="TileType" propertytype="TileType" value="Blocking"/>
+   <property name="TileType" propertytype="TileType" value="Platform"/>
   </properties>
  </tile>
  <tile id="12" type="GameTile">
   <properties>
-   <property name="TileType" propertytype="TileType" value="Blocking"/>
+   <property name="TileType" propertytype="TileType" value="Platform"/>
   </properties>
  </tile>
  <tile id="13" type="GameTile">
@@ -41,7 +41,7 @@
  <tile id="16" type="GameTile"/>
  <tile id="26" type="GameTile">
   <properties>
-   <property name="TileType" propertytype="TileType" value="Blocking"/>
+   <property name="TileType" propertytype="TileType" value="Penetrable"/>
   </properties>
  </tile>
  <tile id="27" type="GameTile">
@@ -56,17 +56,17 @@
  </tile>
  <tile id="29" type="GameTile">
   <properties>
-   <property name="TileType" propertytype="TileType" value="Blocking"/>
+   <property name="TileType" propertytype="TileType" value="Penetrable"/>
   </properties>
  </tile>
  <tile id="30" type="GameTile">
   <properties>
-   <property name="TileType" propertytype="TileType" value="Blocking"/>
+   <property name="TileType" propertytype="TileType" value="Penetrable"/>
   </properties>
  </tile>
  <tile id="31" type="GameTile">
   <properties>
-   <property name="TileType" propertytype="TileType" value="Blocking"/>
+   <property name="TileType" propertytype="TileType" value="Penetrable"/>
   </properties>
  </tile>
  <tile id="32" type="GameTile">

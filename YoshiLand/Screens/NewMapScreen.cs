@@ -4,6 +4,7 @@ using MonoGame.Extended.Screens;
 using MonoGame.Extended.Screens.Transitions;
 using YoshiLand.Enums;
 using YoshiLand.Systems;
+using YoshiLand.Transitions;
 using YoshiLand.UI;
 
 namespace YoshiLand.Screens
@@ -34,7 +35,7 @@ namespace YoshiLand.Screens
         private void OnStageSelected(int obj)
         {
             SFXSystem.Play("yoshi");
-            Game.Screens.ReplaceScreen(new StageEnterScreen(Game, StagesSystem.Worlds[0].Stages[obj]), new MaskTransition(GraphicsDevice, Content, TransitionType.Out, 1.8f));
+            Game.Screens.ReplaceScreen(new GamingScreen(Game, StagesSystem.Worlds[0].Stages[obj]), new FadeTransition(GraphicsDevice, Color.Black, 1.8f));
         }
 
         public override void Initialize()
