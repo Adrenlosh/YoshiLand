@@ -48,7 +48,7 @@ namespace YoshiLand.GameObjects
         private const float MaxFloatTime = 0.8f;
         private const float MaxJumpHoldTime = 0.35f;
         private const float HurtDuration = 0.5f;
-        private const float DieDuration = 2f;
+        private const float DieDuration = 3.5f;
         private const float FloatActivationThreshold = 0.15f;
         private const float PlummetStage1Duration = 0.5f;
 
@@ -198,7 +198,7 @@ namespace YoshiLand.GameObjects
             {
                 Health = 0;
             }
-            Velocity = new Vector2(2 * -_lastDirection, -5);
+            //Velocity = new Vector2(2 * -_lastDirection, -5);
             Physics.HasCollisions = false;
             SFXSystem.Play("yoshi-died");
             GameMain.PlayerStatus.LifeLeft--;
@@ -562,6 +562,17 @@ namespace YoshiLand.GameObjects
             if(_isDie)
             {
                 _dieTimer += elapsedTime;
+                if(_dieTimer <= 1.0f)
+                {
+                    Velocity = new Vector2(0, 0);
+                    Physics.HasGravity = false;
+                }
+                if(_dieTimer > 1.0f && _dieTimer < 1.1f) //TODO:常数 //FIXME:玩家不应有碰撞
+                {
+                    Physics.HasCollisions = false;
+                    Physics.HasGravity = true;
+                    Velocity = new Vector2(1 * -_lastDirection, -2);
+                }
                 if(_dieTimer >= DieDuration)
                 {
                     CanHandleInput = true;

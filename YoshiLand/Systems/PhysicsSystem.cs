@@ -43,12 +43,10 @@ namespace YoshiLand.Systems
         public void ApplyPhysics(GameTime gameTime)
         {
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            // _targetObject.IsOnGround = CheckOnGround();
             _targetObject.IsOnGround = false;
             ApplyCollisions(elapsedTime);
             if(HasGravity) ApplyGravity(elapsedTime);
             ApplyFriction(elapsedTime);
- 
         }
 
         private void ApplyFriction(float elapsedTime)
@@ -70,14 +68,6 @@ namespace YoshiLand.Systems
             }
         }
 
-
-        private bool CheckOnGround() //FIXME: 地面检查有问题
-        {
-            Rectangle collisionBox = _targetObject.GetCollisionBox(_targetObject.Position);
-            Rectangle testRectangle = new Rectangle(collisionBox.X, collisionBox.Y + collisionBox.Height, collisionBox.Width, 2);
-            return _targetObject.IsCollidingWithTile(testRectangle, out TileCollisionResult collisionResult) && !collisionResult.TileType.HasFlag(TileType.Penetrable);
-        }
-
         private void ApplyGravity(float elapsedTime)
         {
             if (!_targetObject.IsOnGround)
@@ -94,43 +84,6 @@ namespace YoshiLand.Systems
 
         private void ApplyCollisions(float deltaTime) //TODO: 重写碰撞检测
         {
-            //Vector2 newPosition = _targetObject.Position;
-            //Vector2 velocity = _targetObject.Velocity * deltaTime * 60f;
-
-            //if(_targetObject.Velocity.X != 0) //水平碰撞检测
-            //{
-            //    Vector2 testPosition = new Vector2(newPosition.X + velocity.X, newPosition.Y);
-            //    bool isCollided = _targetObject.IsCollidingWithTile(_targetObject.GetCollisionBox(testPosition), out TileCollisionResult collisionResult);
-            //    if(isCollided && !collisionResult.TileType.HasFlag(TileType.Penetrable) && !collisionResult.TileType.HasFlag(TileType.Platform))
-            //    {
-            //        _targetObject.Velocity = new Vector2(0, _targetObject.Velocity.Y);
-            //    }
-            //    else
-            //    {
-            //        newPosition = testPosition;
-            //    }
-            //}
-            //if(_targetObject.Velocity.Y != 0) //垂直碰撞检测
-            //{
-            //    Vector2 testPosition = new Vector2(newPosition.X, _targetObject.Position.Y + velocity.Y);
-            //    Rectangle testRectangle = _targetObject.GetCollisionBox(testPosition);
-            //    //if()
-            //    //if (velocity.Y > 0) //下落
-            //    //{
-
-            //    //}
-            //    //else if (velocity.Y < 0) //上升
-            //    //{
-
-            //    //}
-            //    newPosition = testPosition;
-            //}
-
-
-
-            //_targetObject.Position = newPosition;
-
-
             Vector2 newPosition = _targetObject.Position;
             Vector2 velocity = _targetObject.Velocity * deltaTime * 60f;
             if (_targetObject.Velocity.X != 0) //水平碰撞检测
@@ -156,8 +109,6 @@ namespace YoshiLand.Systems
 
                 if (testPosition.Y < 0 && HasCollisions) // 瓦片地图顶部
                 {
-                    //newPosition.Y = 0;
-                    //_targetObject.Velocity = new Vector2(_targetObject.Velocity.X, 0);
                 }
                 else
                 {

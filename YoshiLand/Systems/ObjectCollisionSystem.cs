@@ -40,7 +40,7 @@ namespace YoshiLand.Systems
                     }
                 }
             }
-        }
+        } 
 
         private void HandlePlayerDecorations()
         {

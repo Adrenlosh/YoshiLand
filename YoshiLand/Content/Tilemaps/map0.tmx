@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" class="GameMap" orientation="orthogonal" renderorder="right-down" width="300" height="24" tilewidth="16" tileheight="16" infinite="0" nextlayerid="25" nextobjectid="3478">
+<map version="1.10" tiledversion="1.11.2" class="GameMap" orientation="orthogonal" renderorder="right-down" width="300" height="24" tilewidth="16" tileheight="16" infinite="0" nextlayerid="25" nextobjectid="3479">
  <properties>
   <property name="Song" value="song1"/>
  </properties>
@@ -19,7 +19,7 @@
  </imagelayer>
  <layer id="1" name="Ground" width="300" height="24">
   <data encoding="base64" compression="zlib">
-   eJzt2stOwzAQBdBsEQ9lX2hhAUvgJ1jBx/H8X4zUSJZJVbtRnUfPkUbdTKezunLcNA0AAAAAAAAAAADHdt42zcW2LtuxtwHYbR0yahNqFepWXgET1uXVRl4BEyevgLmQV8DY4nv0tLp79b4ed+7AFMVnK2csYMrivFolefUYPp+Seo6y7EquARWto5wqfafhTl4BFcXvXqXnq31q5dV7+J2PUJ+hvjJ+8z70PMhSWJwh91fHzqsup76j3X725NZfVr2FepVZsDjp82DtvHpp/1dfTqXVl1tdVnU9Mgvm4awdt24KcuJ65F2VUuPWrnNJ/D9gbk9pf+k7EX3PpLX2PJWZc9jRzGXOzO3J3SNndunMQ/Oq9p5LmzmHHc08rZmleXjo7CHfGXq+qrXnKcycw45mLndmTt8vqvLYYg==
+   eJzt2stOwzAQBdBsEQ9lH2hhAUvgJ1jBx/H8X4zUSFZIVTttkzg9Rxp1M53M6spxW1UAAAAAAAAAAAAc23ldVRebuqyn3gZgu1XIqHWoJtStvAJmrM2rtbwCZk5eAaWQV8DU4nv0brX36n097tyBOYrPVs5YwBRWiZkT51XTyavH8PnUqedo7pVcAw4gJ6+aTmalnq/u5BVwALnnq6bnfLXLWHn1Hp7zEeoz1FfCM+9Dz4MshWIMeR/Mvb86dl61OfUd7fazI7f+suot1KvMgmIMfR8cO69e6v/Vl1Pd6sutNqvaHpkFZTirp62bjJy4nnhXpdS0te1cEv8OmNqT25/7n4i+d9Kx9jyVmSXsaOYyZ6b2pO6RMjt35tC8GnvPpc0sYUczT2tmbh4Onb3Pd/Y9X4215ynMLGFHM5c7M6XvFydE2Ug=
   </data>
  </layer>
  <layer id="3" name="Decorations" width="300" height="24">
@@ -79,6 +79,9 @@
    <point/>
   </object>
   <object id="3235" name="Enemy" x="992" y="0">
+   <point/>
+  </object>
+  <object id="3478" name="Enemy" x="137" y="284.5">
    <point/>
   </object>
  </objectgroup>
