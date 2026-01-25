@@ -86,9 +86,17 @@ namespace YoshiLand.Systems
         {
             Vector2 newPosition = _targetObject.Position;
             Vector2 velocity = _targetObject.Velocity * deltaTime * 60f;
+            if (!HasCollisions)
+            {
+                newPosition += velocity;
+                _targetObject.Position = newPosition;
+                _targetObject.IsOnGround = false;
+                return;
+            }
+
             if (_targetObject.Velocity.X != 0) //水平碰撞检测
             {
-                Vector2 horizontalMove = new Vector2(_targetObject.Velocity.X, 0);
+                Vector2 horizontalMove = new Vector2(velocity.X, 0);
                 Vector2 testPosition = newPosition + horizontalMove;
                 Rectangle testRect = _targetObject.GetCollisionBox(testPosition);
                 bool isCollided = _targetObject.IsCollidingWithTile(testRect, out TileCollisionResult result);
@@ -104,7 +112,7 @@ namespace YoshiLand.Systems
             }
             if (_targetObject.Velocity.Y != 0) //垂直碰撞检测
             {
-                Vector2 verticalMove = new Vector2(0, _targetObject.Velocity.Y);
+                Vector2 verticalMove = new Vector2(0, velocity.Y);
                 Vector2 testPosition = newPosition + verticalMove;
 
                 if (testPosition.Y < 0 && HasCollisions) // 瓦片地图顶部
@@ -125,11 +133,11 @@ namespace YoshiLand.Systems
 
                             if (_targetObject.Velocity.Y > 0)
                             {
-                                Rectangle groundTestRect = new Rectangle(penetratedRect.X, penetratedRect.Y + penetratedRect.Height, penetratedRect.Width, (int)Math.Abs(_targetObject.Velocity.Y) + 3);
+                                Rectangle groundTestRect = new Rectangle(penetratedRect.X, penetratedRect.Y + penetratedRect.Height, penetratedRect.Width, (int)Math.Abs(velocity.Y) + 3);
                                 willHitBlockingGround = _targetObject.IsCollidingWithTile(groundTestRect, out groundResult) && !groundResult.TileType.HasFlag(TileType.Penetrable);
                             }
 
-                            if (willHitBlockingGround)
+                            if (willHitBlockingGround && HasCollisions)
                             {
                                 float tileTop = groundResult.TileRectangle.Top;
                                 newPosition.Y = (int)(tileTop - _targetObject.SpriteSize.Y);

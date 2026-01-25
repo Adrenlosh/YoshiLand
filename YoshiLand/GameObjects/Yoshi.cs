@@ -36,7 +36,7 @@ namespace YoshiLand.GameObjects
         private const float MaxSpeed = 2.5f;
         private const float WalkMaxSpeed = 1f;
         private const float Acceleration = 35f;
-        private const float BaseJumpForce = 4.15f;
+        private const float BaseJumpForce = 5f;
         private const float Gravity = 30f;
         private const float PlummetGravity = 50f;
         private const float TurnFriction = 0.9f;
@@ -100,6 +100,7 @@ namespace YoshiLand.GameObjects
         private bool _canJump = true;
         private bool _jumpInitiated = false;
         private bool _isInvincible = false;
+        private bool _isDieBecauseOutOfMap = false;
 
         public override Point SpriteSize => _yoshiSprite.Size;
         public override Vector2 CenterBottomPosition
@@ -198,9 +199,8 @@ namespace YoshiLand.GameObjects
             {
                 Health = 0;
             }
-            //Velocity = new Vector2(2 * -_lastDirection, -5);
             Physics.HasCollisions = false;
-            SFXSystem.Play("yoshi-died");
+            SFXSystem.Play("yoshi-hit");
             GameMain.PlayerStatus.LifeLeft--;
             CanHandleInput = false;
             _isDie = true;
@@ -541,6 +541,7 @@ namespace YoshiLand.GameObjects
             {
                 Die(true);
                 Velocity = Vector2.Zero;
+                _isDieBecauseOutOfMap = true;
             }
             if (CanHandleInput)
             {
@@ -562,20 +563,22 @@ namespace YoshiLand.GameObjects
             if(_isDie)
             {
                 _dieTimer += elapsedTime;
-                if(_dieTimer <= 1.0f)
+                if(_dieTimer <= 0.3f)
                 {
                     Velocity = new Vector2(0, 0);
                     Physics.HasGravity = false;
                 }
-                if(_dieTimer > 1.0f && _dieTimer < 1.1f) //TODO:常数 //FIXME:玩家不应有碰撞
+                else if(_dieTimer > 0.3f && _dieTimer < 0.4f) //TODO:常数 //FIXME:玩家不应有碰撞
                 {
-                    Physics.HasCollisions = false;
+                    SFXSystem.Play("yoshi-died");
                     Physics.HasGravity = true;
-                    Velocity = new Vector2(1 * -_lastDirection, -2);
+                    if (!_isDieBecauseOutOfMap)
+                    {
+                        Velocity = new Vector2((float)(1.5 * -_lastDirection), -5);
+                    }
                 }
-                if(_dieTimer >= DieDuration)
+                else if(_dieTimer >= DieDuration)
                 {
-                    CanHandleInput = true;
                     OnDieComplete?.Invoke();
                 }
             }

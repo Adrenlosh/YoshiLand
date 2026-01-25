@@ -14,7 +14,8 @@
 		<SoundEffect name="yoshi-jump" file="yoshi-jump.wav"/>
 		<SoundEffect name="yoshi-spit" file="yoshi-spit.wav"/>
 		<SoundEffect name="yoshi-tongue" file="yoshi-tongue.wav"/>
-		<SoundEffect name="yoshi-died" file="yoshi-died.wav"/>
+		<SoundEffect name="yoshi-died" file="yoshi-died.wav" singleInstance="true"/>
+		<SoundEffect name="yoshi-hit" file="yoshi-hit.wav"/>
 		<SoundEffect name="throw" file="throw.wav"/>
 		<SoundEffect name="plummet" file="plummet.wav"/>
 		<SoundEffect name="pause" file="pause.wav"/>

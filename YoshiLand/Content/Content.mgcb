@@ -210,6 +210,9 @@
 #begin Audio/SFX/yoshi-float.wav
 /copy:Audio/SFX/yoshi-float.wav
 
+#begin Audio/SFX/yoshi-hit.wav
+/copy:Audio/SFX/yoshi-hit.wav
+
 #begin Audio/SFX/yoshi-hurt.wav
 /copy:Audio/SFX/yoshi-hurt.wav
 
