@@ -13,6 +13,9 @@
       <Deploy />
     </Project>
     <Project Path="YoshiLand.DesktopGL/YoshiLand.DesktopGL.csproj" />
+    <Project Path="YoshiLand.iOS/YoshiLand.iOS.csproj" Id="f74214cc-9437-4d0e-aa7e-4593a7af743a">
+      <Deploy />
+    </Project>
     <Project Path="YoshiLand.WindowsDX/YoshiLand.WindowsDX.csproj" />
   </Folder>
   <Project Path="YoshiLand/YoshiLand.csproj" />

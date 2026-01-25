@@ -28,7 +28,7 @@
   </data>
  </layer>
  <objectgroup id="2" name="Objects">
-  <object id="16" name="Player" type="SpawnPoint" x="64" y="288">
+  <object id="16" name="Player" type="SpawnPoint" x="4336" y="288">
    <properties>
     <property name="Name" value="Entry"/>
    </properties>
