@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using MonoStereo;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,23 +14,15 @@ namespace YoshiLand.Systems
     {
         private static ContentManager _content;
         private static Dictionary<string, SFX> _SFXs;
-        private static Dictionary<string, byte[]> _SFXCache;
+        private static List<SoundEffect> _SFXPlayers;
         private static float previousVolume =1.0f;
         private static bool isMute = false;
-
-        private class PlaybackInstance
-        {
-            public Stream Stream { get; set; }
-        }
-
-        private static Dictionary<string, PlaybackInstance> _activeSfxPlayers;
 
         public static void Initialize(ContentManager content)
         {
             _content = content;
             _SFXs = new Dictionary<string, SFX>();
-            _SFXCache = new Dictionary<string, byte[]>();
-            _activeSfxPlayers = new Dictionary<string, PlaybackInstance>();
+            _SFXPlayers = new List<SoundEffect>();
             LoadConfig();
         }
 
@@ -71,24 +64,32 @@ namespace YoshiLand.Systems
 
         public static void Update(GameTime gameTime)
         {
-            CleanupFinishedSfxPlayers();
-        }
-
-        private static void CleanupFinishedSfxPlayers()
-        {
+            foreach(SoundEffect player in _SFXPlayers)
+            {
+                if(player.PlaybackState == NAudio.Wave.PlaybackState.Stopped)
+                {
+                    _SFXPlayers.Remove(player);
+                }
+            }
         }
 
         public static void Play(string sfxName)
         {
-            if (_SFXs.ContainsKey(sfxName) && _SFXs[sfxName].SingleInstance && _activeSfxPlayers.ContainsKey(sfxName))
+            if (_SFXs.ContainsKey(sfxName) && _SFXs[sfxName].SingleInstance)
                 return;
 
-            //if (_SFXs.TryGetValue(sfxName, out SFX sfx))
-            //{
-            //    if (sfx.SingleInstance)
-            //    {
-            //        Stop(sfxName);
-            //    }
+            if (_SFXs.TryGetValue(sfxName, out SFX sfx))
+            {
+                string sfxPath = Path.Combine(_content.RootDirectory, "Audio", "SFX", sfx.File);
+                SoundEffect soundEffect = SoundEffect.Create(CachedSoundEffect.Create(sfxPath));
+                soundEffect.Volume = sfx.Volume;
+                soundEffect.Play();
+                _SFXPlayers.Add(soundEffect);
+                //if (sfx.SingleInstance)
+                //{
+                //    Stop(sfxName);
+                //}
+
 
             //    if (!_SFXCache.ContainsKey(sfxName))
             //    {
@@ -117,17 +118,17 @@ namespace YoshiLand.Systems
             //    };
 
             //    _activeSfxPlayers[sfxName] = instance;
-            //}
-            //else
-            //{
-            //    throw new ArgumentException(nameof(sfxName));
-            //}
+            }
+            else
+            {
+                throw new ArgumentException(nameof(sfxName));
+            }
         }
 
         public static void Stop(string sfxName)
         {
-            if (_activeSfxPlayers.TryGetValue(sfxName, out PlaybackInstance instance))
-            {
+            //if (_activeSfxPlayers.TryGetValue(sfxName, out PlaybackInstance instance))
+            //{
                 //try
                 //{
                 //    instance.Player.Stop();
@@ -142,7 +143,7 @@ namespace YoshiLand.Systems
                 //instance.Provider?.Dispose();
                 //instance.Stream?.Dispose();
                 //_activeSfxPlayers.Remove(sfxName);
-            }
+            //}
         }
 
         public static void StopAll()
@@ -168,10 +169,10 @@ namespace YoshiLand.Systems
 
         public static void SetVolume(float volume)
         {
-            foreach (var instance in _activeSfxPlayers.Values)
-            {
+            //foreach (var instance in _activeSfxPlayers.Values)
+            //{
                 //instance.Player.Volume = volume;
-            }
+           // }
         }
 
         public static void Mute()
@@ -214,12 +215,13 @@ namespace YoshiLand.Systems
         public static void Dispose()
         {
             StopAll();
+            _SFXs?.Clear();
            // playbackDevice?.Dispose();
            // engine?.Dispose();
-            _activeSfxPlayers?.Clear();
+            //_activeSfxPlayers?.Clear();
             //_sfxPlayersPool?.Clear();
-            _SFXs?.Clear();
-            _SFXCache?.Clear();
+            
+            //_SFXCache?.Clear();
         }
     }
 }
