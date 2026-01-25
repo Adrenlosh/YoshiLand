@@ -5,24 +5,21 @@ using MLEM.Ui;
 using MLEM.Ui.Style;
 using MonoGame.Extended.BitmapFonts;
 using MonoGame.Extended.Screens;
-using MonoGame.Extended.Screens.Transitions;
 using MonoGame.Extended.ViewportAdapters;
-using SoundFlow.Abstracts.Devices;
-using SoundFlow.Backends.MiniAudio;
-using SoundFlow.Codecs.FFMpeg;
-using SoundFlow.Structs;
+using MonoStereo;
 using System;
 using System.Linq;
 using YoshiLand.Screens;
 using YoshiLand.Status;
 using YoshiLand.Systems;
 
-namespace YoshiLand
+namespace YoshiLand //TODO: Move SoundFlow to MonoSetro
 {
     public class GameMain : Game
     {
         private GraphicsDeviceManager _graphicsDeviceManager;
         private SpriteBatch _spriteBatch;
+        private bool _isRunning = true;
         private readonly ScreenManager _screenManager;
 
         public ScreenManager Screens => _screenManager;
@@ -41,6 +38,7 @@ namespace YoshiLand
                 PreferredBackBufferHeight = GlobalConfig.VirtualResolution_Height,
             };
             _graphicsDeviceManager.ApplyChanges();
+            MonoStereoEngine.Initialize(() => !_isRunning);
             Services.AddService(_graphicsDeviceManager);
             _screenManager = new ScreenManager();
             Components.Add(_screenManager);
@@ -54,6 +52,12 @@ namespace YoshiLand
         protected override void Initialize()
         {
             base.Initialize();
+        }
+
+        protected override void OnExiting(object sender, ExitingEventArgs args)
+        {
+            _isRunning = false;
+            base.OnExiting(sender, args);
         }
 
         private void InitializeUi()
@@ -86,10 +90,9 @@ namespace YoshiLand
             ViewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, GlobalConfig.VirtualResolution_Width, GlobalConfig.VirtualResolution_Height);
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             InitializeUi();
-            InitializeAudio(out MiniAudioEngine engine, out AudioPlaybackDevice playbackDevice);
             StagesSystem.Initialize(Content);
-            SFXSystem.Initialize(Content, engine, playbackDevice);
-            SongSystem.Initialize(Content, engine, playbackDevice);
+            SFXSystem.Initialize(Content);
+            SongSystem.Initialize(Content);
 
 
 #if !DEBUG
@@ -98,18 +101,6 @@ namespace YoshiLand
             _screenManager.ShowScreen(new GamingScreen(this, StagesSystem.Worlds[0].Stages[0]));
 #endif
             base.LoadContent();
-        }
-
-        private void InitializeAudio(out MiniAudioEngine engine, out AudioPlaybackDevice device)
-        {
-            engine = new MiniAudioEngine();
-            
-            engine.RegisterCodecFactory(new FFmpegCodecFactory());
-            engine.RegisterCodecFactory(new MiniAudioCodecFactory());
-            engine.SetCodecPriority("SoundFlow.MiniAudio.Default", int.MaxValue);
-            DeviceInfo defaultDevice = engine.PlaybackDevices.FirstOrDefault(x => x.IsDefault);
-            device = engine.InitializePlaybackDevice(defaultDevice, AudioFormat.DvdHq);
-            device.Start();
         }
 
         protected override void UnloadContent()

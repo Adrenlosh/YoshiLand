@@ -568,7 +568,7 @@ namespace YoshiLand.GameObjects
                     Velocity = new Vector2(0, 0);
                     Physics.HasGravity = false;
                 }
-                else if(_dieTimer > 0.3f && _dieTimer < 0.4f) //TODO:常数 //FIXME:玩家不应有碰撞
+                else if(_dieTimer > 0.3f && _dieTimer < 0.4f) //TODO:常数 //FIXME:击退动画僵硬
                 {
                     SFXSystem.Play("yoshi-died");
                     Physics.HasGravity = true;

@@ -1,15 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using SoundFlow.Abstracts.Devices;
-using SoundFlow.Backends.MiniAudio;
-using SoundFlow.Codecs.FFMpeg;
-using SoundFlow.Components;
-using SoundFlow.Providers;
-using SoundFlow.Structs;
+using MonoStereo.Sources.Songs;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Xml;
 using YoshiLand.Models;
 
@@ -18,21 +12,17 @@ namespace YoshiLand.Systems
     public static class SongSystem
     {
         private static ContentManager _content;
-        private static MiniAudioEngine engine;
-        private static AudioPlaybackDevice playbackDevice;
-        private static SoundPlayer soundPlayer;
         private static Dictionary<string, Song> _songs;
         private static float previousVolume = 1.0f;
         private static bool isMute = false;
 
-        private static Stream stream;
+        private static MonoStereo.Song songPlayer;
+        private static SongReader songReader;
 
-        public static void Initialize(ContentManager content, MiniAudioEngine engine, AudioPlaybackDevice playbackDevice)
+        public static void Initialize(ContentManager content)
         {
             _content = content;
             _songs = new Dictionary<string, Song>();
-            SongSystem.engine = engine;
-            SongSystem.playbackDevice = playbackDevice;
             LoadConfig();
         }
 
@@ -60,12 +50,6 @@ namespace YoshiLand.Systems
                         song.Volume = float.Parse(songNode.Attributes["volume"].Value);
                     }
 
-                    if (songNode.Attributes["repeatStartSecond"] != null)
-                    {
-                        int repeatStartSecond = int.Parse(songNode.Attributes["repeatStartSecond"].Value);
-                        song.RepeatStartTime = TimeSpan.FromSeconds(repeatStartSecond);
-                    }
-
                     if (!string.IsNullOrEmpty(song.Name))
                     {
                         _songs[song.Name] = song;
@@ -79,59 +63,50 @@ namespace YoshiLand.Systems
             if (_songs.TryGetValue(songName, out Song song))
             {
                 Stop();
+                songReader?.Dispose();
+                songPlayer?.Dispose();
                 string songPath = Path.Combine(_content.RootDirectory, "Audio", "Song", song.File);
-                stream = TitleContainer.OpenStream(songPath);
-                soundPlayer = new SoundPlayer(engine, AudioFormat.DvdHq, new StreamDataProvider(engine, AudioFormat.DvdHq, stream));
-                playbackDevice.MasterMixer.AddComponent(soundPlayer);
-                soundPlayer.Volume = song.Volume;
-                soundPlayer.IsLooping = song.IsLooping;
-                soundPlayer.SetLoopPoints(song.RepeatStartTime);
-                soundPlayer.Play();
-                soundPlayer.PlaybackEnded += (s, e) =>
-                {
-                    if (song.IsLooping && soundPlayer != null)
-                    {
-                        soundPlayer.Seek(song.RepeatStartTime);
-                        soundPlayer.Play();
-                    }
-                };
+                songReader = new SongReader(songPath);
+                songReader.IsLooped = song.IsLooping;
+                
+                songPlayer = MonoStereo.Song.CreateBuffered(songReader);
+                songPlayer.IsLooped = song.IsLooping;
+                songPlayer.Play();
             }
         }
 
         public static void Stop()
         {
-            if (soundPlayer != null)
-            {
-                soundPlayer.Stop();
-                soundPlayer.Dispose();
-                soundPlayer = null;
-                stream?.Dispose();
-            }
+            //if (soundPlayer != null)
+            //{
+            //    soundPlayer.Stop();
+            //    soundPlayer.Dispose();
+            //    soundPlayer = null;
+            //    stream?.Dispose();
+            //}
+            songPlayer?.Stop();
         }
 
         public static void Pause()
         {
-            soundPlayer?.Pause();
+            songPlayer?.Pause();
         }
 
         public static void Resume()
         {
-            soundPlayer?.Play();
+            songPlayer?.Resume();
         }
 
         public static void SetVolume(float volume)
         {
-            if (soundPlayer != null)
-            {
-                soundPlayer.Volume = volume;
-            }
+            songPlayer?.Volume = volume;
         }
 
         public static void Mute()
         {
             if (!isMute)
             {
-                previousVolume = soundPlayer?.Volume ?? 1.0f;
+                previousVolume = songPlayer?.Volume ?? 1.0f;
                 SetVolume(0f);
                 isMute = true;
             }
@@ -158,28 +133,12 @@ namespace YoshiLand.Systems
             }
         }
 
-        public static float GetSpeed()
-        {
-            return soundPlayer.PlaybackSpeed;
-        }
-
-        public static void SetSpeed(float speed = 3f)
-        {
-            soundPlayer.PlaybackSpeed = speed;
-        }
-
-        public static void NormalSpeed()
-        {
-            soundPlayer.PlaybackSpeed = 1;
-        }
-
         public static void Dispose()
         {
             Stop();
-            playbackDevice?.Dispose();
-            engine?.Dispose();
             _songs?.Clear();
-            stream?.Dispose();
+            songPlayer?.Dispose();
+            songReader?.Dispose();
         }
     }
 }

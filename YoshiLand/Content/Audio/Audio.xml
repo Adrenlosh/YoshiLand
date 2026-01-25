@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Audio>
 	<Songs>
-		<Song name="title" file="title.ogg" repeat="true" repeatStartSecond="0"/>
+		<Song name="title" file="title.ogg" repeat="true"/>
 		<Song name="goal" file="goal.ogg" repeat="false"/>
 		<Song name="song1" file="song1.ogg" repeat="true" volume="1"/>
 		<Song name="song2" file="song2.ogg" repeat="true"/>
