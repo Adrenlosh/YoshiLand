@@ -15,8 +15,9 @@ using YoshiLand.UI;
 
 namespace YoshiLand.Screens
 {
-    public class GamingScreen : GameScreen
+    public class GamingScreen : GameScreen //TODO: 修改过关效果。怎么改？
     {
+        private const float GoalDuration = 7f;
         private GameSceneRender _gameSceneRenderer;
         private GameObjectFactory _gameObjectFactory;
         private GamingScreenUI _ui;        
@@ -30,6 +31,7 @@ namespace YoshiLand.Screens
         private bool _isPlayerDie = false;
         private bool _isTransitioning = false;
         private bool _handlePause = true;
+        private float _goalTimer = 0f;
         private KeyValuePair<string, string> _spawnPoint;
 
         public new GameMain Game => (GameMain)base.Game;
@@ -87,7 +89,21 @@ namespace YoshiLand.Screens
 
             if (_shouldMovePlayer)
             {
-                GameObjectsSystem.Player.Velocity = new Vector2(1f, 1);
+                _goalTimer += elapsedTime;
+                if (_goalTimer >= 0f && _goalTimer <= 5f)
+                {
+                    GameObjectsSystem.Player.Velocity = new Vector2(1f, 0);
+                }
+                else if(_goalTimer > 5f && _goalTimer <= GoalDuration)
+                {
+                    GameObjectsSystem.Player.Victory();
+                }
+                else
+                {
+                    SFXSystem.Play("exit");
+                    GameObjectsSystem.Player.CanHandleInput = true;
+                    Game.Screens.ReplaceScreen(new NewMapScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
+                }
             }
 
             if (_ui.IsReadingMessage)
@@ -109,10 +125,7 @@ namespace YoshiLand.Screens
                 return;
             }
 
-            bool isTransitioning = _isTransitioning;
-            var player = GameObjectsSystem.Player;
-
-            if (!isTransitioning)
+            if (!_isTransitioning)
             {
                 var screenBounds = _gameSceneRenderer.GetScreenBounds();
                 GameObjectsSystem.InactivateObejcts(screenBounds);
@@ -120,17 +133,14 @@ namespace YoshiLand.Screens
                 GameObjectsSystem.Update(gameTime);
                 _objectCollisionSystem.Update(gameTime);
 
-                if (player != null)
-                {
-                    player.ScreenBounds = screenBounds;
-                }
+                GameObjectsSystem.Player?.ScreenBounds = screenBounds;
             }
 
-            if (player != null)
+            if (GameObjectsSystem.Player != null)
             {
-                bool useFadeCamera = isTransitioning || _gameSceneRenderer.FadeStatus == FadeStatus.None;
-                _gameSceneRenderer.Update(gameTime, player.Position, false,
-                    player.FaceDirection, player.Velocity);
+                bool useFadeCamera = _isTransitioning || _gameSceneRenderer.FadeStatus == FadeStatus.None;
+                _gameSceneRenderer.Update(gameTime, GameObjectsSystem.Player.Position, false,
+                    GameObjectsSystem.Player.FaceDirection, GameObjectsSystem.Player.Velocity);
             }
 
             _ui.Update(gameTime, _remainingTime);
@@ -220,8 +230,8 @@ namespace YoshiLand.Screens
             SongSystem.Play("goal");
             GameObjectsSystem.Player.CanHandleInput = false;
             _shouldMovePlayer = true;
-            _gameSceneRenderer.FadeType = FadeType.Goal;
-            _gameSceneRenderer.StartFade();
+            //_gameSceneRenderer.FadeType = FadeType.Goal;
+            //_gameSceneRenderer.StartFade();
         }
 
         private void OnFadeComplete()
@@ -231,9 +241,7 @@ namespace YoshiLand.Screens
                 _isTransitioning = false;
                 return;
             }
-            SFXSystem.Play("exit");
-            GameObjectsSystem.Player.CanHandleInput = true;
-            Game.Screens.ReplaceScreen(new NewMapScreen(Game), new FadeTransition(GraphicsDevice, Color.Black, 1.5f));
+
         }
 
         private void OnFadeKeep()

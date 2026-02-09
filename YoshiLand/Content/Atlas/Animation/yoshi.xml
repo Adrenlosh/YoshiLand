@@ -110,6 +110,9 @@
         <Animation name="turn-mouthing" looping="false" frameDuration="0.15">
             <Frames>9</Frames>
         </Animation>
+		<Animation name="victory" looping="false" frameDuration="0.15">
+			<Frames>26, 66</Frames>
+		</Animation>
     </SpriteSheet>
     <SpriteSheet name="crosshair" texture="Atlas/crosshair" frameWidth="16" frameHeight="16">
         <Animation name="shine" looping="true" frameDuration="0.005">

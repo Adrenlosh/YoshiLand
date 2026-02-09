@@ -1,4 +1,7 @@
-﻿namespace YoshiLand.Models
+﻿using MonoStereo;
+using System.IO;
+
+namespace YoshiLand.Models
 {
     public class SFX
     {
@@ -9,5 +12,7 @@
         public float Volume { get; set; } = 1.0f;
 
         public bool SingleInstance { get; set; } = false;
+
+        public CachedSoundEffect Cached { get; set; }
     }
 }

@@ -101,6 +101,7 @@ namespace YoshiLand.GameObjects
         private bool _jumpInitiated = false;
         private bool _isInvincible = false;
         private bool _isDieBecauseOutOfMap = false;
+        private bool _isVictory = false;
 
         public override Point SpriteSize => _yoshiSprite.Size;
         public override Vector2 CenterBottomPosition
@@ -423,7 +424,11 @@ namespace YoshiLand.GameObjects
 
         private void UpdateAnimation()
         {
-            if (_isDie)
+            if (_isVictory)
+            {
+                SetYoshiAnimation("victory", true);
+            }
+            else if (_isDie)
             {
                 SetYoshiAnimation("die", true);
             }
@@ -827,6 +832,11 @@ namespace YoshiLand.GameObjects
         public void Bounce()
         {
             Physics.ApplyJump(BaseJumpForce * 2);
+        }
+
+        public void Victory()
+        {
+            _isVictory = true;
         }
         #endregion
     }
