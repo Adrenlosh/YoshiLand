@@ -157,7 +157,7 @@ namespace YoshiLand.Screens
 
         private void UpdateTimer(GameTime gameTime)
         {
-            if (!_ui.IsReadingMessage && !_isPlayerDie && _gameSceneRenderer.FadeStatus == FadeStatus.None)
+            if (!_ui.IsReadingMessage && !_isPlayerDie && _gameSceneRenderer.FadeStatus == FadeStatus.None && !_shouldMovePlayer)
             {
                 _remainingTime -= gameTime.ElapsedGameTime;
                 if (_remainingTime <= TimeSpan.Zero)

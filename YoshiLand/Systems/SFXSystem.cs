@@ -166,7 +166,6 @@ namespace YoshiLand.Systems
 
         public static bool IsPlaying(string sfxName)
         {
-            // 需要更完整的实现以检测特定 sfxName 是否在播放
             return true;
         }
 

@@ -19,7 +19,7 @@
 		<SoundEffect name="throw" file="throw.wav"/>
 		<SoundEffect name="plummet" file="plummet.wav"/>
 		<SoundEffect name="pause" file="pause.wav"/>
-		<SoundEffect name="exit" file="exit.wav"/>
+		<SoundEffect name="exit" file="exit.wav" singleInstance="true"/>
 		<SoundEffect name="coin" file="coin.wav"/>
 		<SoundEffect name="1up" file="1up.wav"/>
 	</SoundEffects>
