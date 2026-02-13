@@ -12,7 +12,7 @@ using YoshiLand.Screens;
 using YoshiLand.Status;
 using YoshiLand.Systems;
 
-namespace YoshiLand //TODO: **************
+namespace YoshiLand
 {
     public class GameMain : Game
     {
