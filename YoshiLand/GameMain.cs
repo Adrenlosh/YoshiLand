@@ -46,6 +46,7 @@ namespace YoshiLand
             Content.RootDirectory = "Content";
             Window.AllowUserResizing = true;
             Window.Title = Language.Strings.GameName;
+
         }
 
         protected override void Initialize()
