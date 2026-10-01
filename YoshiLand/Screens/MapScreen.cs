@@ -45,6 +45,7 @@ namespace YoshiLand.Screens
         public override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
             _backgroundPattern = Content.Load<Texture2D>("Images/background-pattern");
             _bitmapFont = Content.Load<BitmapFont>("Fonts/ZFull-GB");
             _tilemap = Content.Load<TiledMap>("Tilemaps/map");
